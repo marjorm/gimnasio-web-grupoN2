@@ -7,7 +7,8 @@ El presente proyecto consiste en desarrollar un sistema web completo para la ges
 Proyecto de Programación 4 (II Semestre 2026) - Universidad Nacional.
 
 ## Integrantes
-- Maria Ramirez Elizondo - Lider 
+- Maria Ramirez Elizondo - Lider
+- Antonio Scala González - Desarrollador Backend/frontend, documentación
 
 ## Requisitos
 - XAMPP (Apache + MySQL)
