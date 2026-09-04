@@ -9,6 +9,8 @@ Proyecto de Programación 4 (II Semestre 2026) - Universidad Nacional.
 ## Integrantes
 - Maria Ramirez Elizondo - Lider
 - Roberto Chavarria Garcia - Desarrollador Backend,frontend, documentacion
+- Antonio Scala González - Desarrollador Backend,frontend, documentacion
+- Cristopher Madrigal Masis - Desarrollador Backend,frontend, documentacion
 
 ## Requisitos
 - XAMPP (Apache + MySQL)
