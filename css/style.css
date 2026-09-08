@@ -1,0 +1,154 @@
+/* Reset básico */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: Arial, Helvetica, sans-serif;
+    color: #222;
+    line-height: 1.5;
+}
+
+/* Header y navegación */
+header {
+    background-color: #1f4e79;
+    color: white;
+    padding: 1rem;
+}
+
+header h1 {
+    margin-bottom: 0.5rem;
+}
+
+.menu-principal {
+    list-style: none;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1.5rem;
+}
+
+.menu-principal a {
+    color: white;
+    text-decoration: none;
+    font-weight: bold;
+}
+
+.menu-principal a:hover {
+    text-decoration: underline;
+}
+
+/* Submenú de Servicios */
+.tiene-submenu {
+    position: relative;
+}
+
+.submenu {
+    display: none;
+    position: absolute;
+    top: 100%;
+    left: 0;
+    background-color: #1f4e79;
+    list-style: none;
+    min-width: 180px;
+    z-index: 10;
+}
+
+.tiene-submenu:hover .submenu {
+    display: block;
+}
+
+.submenu li {
+    padding: 0.5rem 1rem;
+}
+
+/* Contenido principal */
+main {
+    padding: 2rem;
+    min-height: 60vh;
+}
+
+/* Footer */
+footer {
+    background-color: #222;
+    color: white;
+    text-align: center;
+    padding: 1rem;
+}
+
+/* Ejemplo de grid para galería de fotos (Inicio) */
+.galeria {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1rem;
+}
+
+.galeria img {
+    width: 65%;
+    border-radius: 48px;
+}
+
+/* Formularios */
+form {
+    display: flex;
+    flex-direction: column;
+    max-width: 500px;
+    gap: 1rem;
+}
+
+form label {
+    font-weight: bold;
+}
+
+form input,
+form textarea {
+    padding: 0.5rem;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+
+.redes-sociales a {
+    margin-right: 1rem;
+    font-size: 1.5rem;
+}
+
+article {
+    margin-bottom: 2rem;
+}
+main h2 {
+    margin-bottom: 1.5rem;
+}
+
+section{
+    margin-bottom: 2rem;
+}
+/* ---------- Responsive ---------- */
+
+/* Tablet */
+@media (max-width: 768px) {
+    .galeria {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+/* Móvil */
+@media (max-width: 480px) {
+    .menu-principal {
+        flex-direction: column;
+        gap: 0.5rem;
+    }
+
+    .galeria {
+        grid-template-columns: 1fr;
+    }
+
+    .submenu {
+        position: static;
+        display: none;
+    }
+
+    .tiene-submenu:hover .submenu {
+        display: block;
+    }
+}

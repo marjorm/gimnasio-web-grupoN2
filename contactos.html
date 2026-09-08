@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gimnasio - Inicio</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<header>
+    <h1>Gimnasio Grupo N</h1>
+    <nav>
+        <ul class="menu-principal">
+            <li><a href="index.html">Inicio</a></li>
+            <li><a href="contactos.html">Contactos</a></li>
+            <li class="tiene-submenu">
+                <a href="servicios.html">Servicios</a>
+                <ul class="submenu">
+                    <li><a href="inscripcion.html">Inscripción</a></li>
+                    <li><a href="cursos.html">Cursos</a></li>
+                    <li><a href="rutinas.html">Rutinas</a></li>
+                    <li><a href="maquinas.html">Máquinas</a></li>
+                    <li><a href="instructores.html">Instructores</a></li>
+                    <li><a href="mantenimiento.html">Mantenimiento</a></li>
+                    <li><a href="desinscribirse.html">Desinscribirse</a></li>
+                </ul>
+            </li>
+            <li><a href="blog.html">Blog</a></li>
+        </ul>
+    </nav>
+</header>
+
+<main>
+    <section>
+        <h2>Contáctanos</h2>
+        <address>
+            <p>Teléfono: <a href="tel:+50622223333">2222-3333</a></p>
+            <p>Dirección: Barva, Heredia, Costa Rica</p>
+            <p>Correo: <a href=" ">gimnacigrupo2@gmail.com</a></p>
+        </address>
+
+        <div class="redes-sociales">
+            <a href="https://facebook.com/Grupo2" target="_blank" rel="noopener">Facebook</a>
+            <a href="https://instagram.com/Grupo2" target="_blank" rel="noopener">Instagram</a>
+        </div>
+    </section>
+
+    <section>
+        <h3>Formulario de consulta</h3>
+        <form action="#" method="post">
+            <label for="nombre">Nombre completo</label>
+            <input type="text" id="nombre" name="nombre" required minlength="3">
+
+            <label for="email">Correo electrónico</label>
+            <input type="email" id="email" name="email" required>
+
+            <label for="telefono">Teléfono</label>
+            <input type="tel" id="telefono" name="telefono" pattern="[0-9]{4}-?[0-9]{4}" placeholder="8888-8888" required>
+
+            <label for="mensaje">Mensaje</label>
+            <textarea id="mensaje" name="mensaje" rows="4" required></textarea>
+
+            <button type="submit">Enviar</button>
+        </form>
+    </section>
+</main>
+
+<footer>
+    <p>&copy; 2026 Gimnasio Grupo 2 - Programación 4</p>
+</footer>
+
+</body>
+</html>
