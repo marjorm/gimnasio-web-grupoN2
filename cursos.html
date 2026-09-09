@@ -3,77 +3,80 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Cursos - Gimnasio Grupo 2</title>
+    <title>Gimnasio Grupo 2 - Cursos</title>
+    <link rel="stylesheet" href="css/style.css">
     <link rel="stylesheet" href="css/style2.css">
 </head>
 <body>
-
 <header>
-    <h1>Gimnasio Grupo 2</h1>
-    <nav>
-        <ul class="menu-principal">
-            <li><a href="index.html">Inicio</a></li>
-            <li><a href="contactos.html">Contactos</a></li>
-            <li class="tiene-submenu">
-                <a href="servicios.html">Servicios</a>
-                <ul class="submenu">
-                    <li><a href="inscripcion.html">Inscripción</a></li>
-                    <li><a href="cursos.html">Cursos</a></li>
-                    <li><a href="rutinas.html">Rutinas</a></li>
-                    <li><a href="maquinas.html">Máquinas</a></li>
-                    <li><a href="instructores.html">Instructores</a></li>
-                    <li><a href="mantenimiento.html">Mantenimiento</a></li>
-                    <li><a href="desinscribirse.html">Desinscribirse</a></li>
-                </ul>
-            </li>
-            <li><a href="blog.html">Blog</a></li>
-        </ul>
-    </nav>
-</header>
-
-<main>
-    <h2>Nuestros Cursos Ofertados</h2>
-    <p style="margin-bottom: 1.5rem;">Consulta los cursos disponibles en la base de datos y sus horarios:</p>
-
-    <div class="cursos-grid">
-        <!-- Curso 1 -->
-        <article class="curso-card">
-            <img src="img/hero.png" alt="Spinning">
-            <div class="curso-info">
-                <h3>ID Curso: 101</h3>
-                <p><strong>Descripción:</strong> Spinning Intensivo</p>
-                <p><strong>Horario:</strong> Lunes y Miércoles 6:00 AM - 7:00 AM</p>
-                <p><strong>Disponibilidad:</strong> 15 Cupos libres</p>
-            </div>
-        </article>
-
-        <!-- Curso 2 -->
-        <article class="curso-card">
-            <img src="img/hero.png" alt="Yoga">
-            <div class="curso-info">
-                <h3>ID Curso: 102</h3>
-                <p><strong>Descripción:</strong> Yoga & Pilates</p>
-                <p><strong>Horario:</strong> Martes y Jueves 5:00 PM - 6:30 PM</p>
-                <p><strong>Disponibilidad:</strong> 8 Cupos libres</p>
-            </div>
-        </article>
-
-        <!-- Curso 3 -->
-        <article class="curso-card">
-            <img src="img/hero.png" alt="Crossfit">
-            <div class="curso-info">
-                <h3>ID Curso: 103</h3>
-                <p><strong>Descripción:</strong> CrossFit & Acondicionamiento</p>
-                <p><strong>Horario:</strong> Viernes y Sábados 8:00 AM - 10:00 AM</p>
-                <p><strong>Disponibilidad:</strong> 5 Cupos libres</p>
-            </div>
-        </article>
+    <div class="contenedor-header">
+        <h1>Gimnasio Grupo 2</h1>
+        <nav aria-label="Navegación principal">
+            <ul class="menu-principal">
+                <li><a href="index.html">Inicio</a></li>
+                <li><a href="contactos.html">Contactos</a></li>
+                <li class="tiene-submenu">
+                    <a href="servicios.html">Servicios</a>
+                    <ul class="submenu">
+                        <li><a href="inscripcion.html">Inscripción</a></li>
+                        <li><a href="cursos.html">Cursos</a></li>
+                        <li><a href="rutinas.html">Rutinas</a></li>
+                        <li><a href="maquinas.html">Máquinas</a></li>
+                        <li><a href="instructores.html">Instructores</a></li>
+                        <li><a href="mantenimiento.html">Mantenimiento</a></li>
+                        <li><a href="desinscribirse.html">Desinscribirse</a></li>
+                    </ul>
+                </li>
+                <li><a href="blog.html">Blog</a></li>
+            </ul>
+        </nav>
     </div>
-</main>
+</header>
+<main>
+    <section>
+        <h2>Cursos disponibles</h2>
+        <p class="intro-seccion">Consulta nuestra oferta de cursos, horarios y cupos disponibles.</p>
 
+        <div class="cursos-grid">
+            <article class="curso-card">
+                <img src="img/instalacion2.jpg" alt="Zona de cardio utilizada para clases de spinning">
+                <div class="curso-info">
+                    <h3>Curso 101</h3>
+                    <p><strong>Descripción:</strong> Spinning intensivo</p>
+                    <p><strong>Horario:</strong> Lunes y miércoles, 6:00 a. m. - 7:00 a. m.</p>
+                    <p><strong>Disponibilidad:</strong> 15 cupos</p>
+                </div>
+            </article>
+
+            <article class="curso-card">
+                <img src="img/instalacion3.jpg" alt="Salón destinado a clases grupales">
+                <div class="curso-info">
+                    <h3>Curso 102</h3>
+                    <p><strong>Descripción:</strong> Yoga y Pilates</p>
+                    <p><strong>Horario:</strong> Martes y jueves, 5:00 p. m. - 6:30 p. m.</p>
+                    <p><strong>Disponibilidad:</strong> 8 cupos</p>
+                </div>
+            </article>
+
+            <article class="curso-card">
+                <img src="img/instalacion1.jpg" alt="Área de entrenamiento de fuerza">
+                <div class="curso-info">
+                    <h3>Curso 103</h3>
+                    <p><strong>Descripción:</strong> Acondicionamiento funcional</p>
+                    <p><strong>Horario:</strong> Viernes y sábado, 8:00 a. m. - 10:00 a. m.</p>
+                    <p><strong>Disponibilidad:</strong> 5 cupos</p>
+                </div>
+            </article>
+        </div>
+    </section>
+
+    <aside class="nota-informativa">
+        <h2>Disponibilidad</h2>
+        <p>Los cupos pueden variar según el horario y la cantidad de personas inscritas en cada curso.</p>
+    </aside>
+</main>
 <footer>
     <p>&copy; 2026 Gimnasio Grupo 2 - Programación 4</p>
 </footer>
-
 </body>
 </html>

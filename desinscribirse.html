@@ -3,44 +3,65 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Gimnasio - Desinscripción</title>
+    <title>Gimnasio Grupo 2 - Desinscribirse</title>
     <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
-
 <header>
-    <h1>Gimnasio Grupo 2 - Desinscribirse</h1>
-    <nav>
-        <ul class="menu-principal">
-            <li><a href="index.html">Inicio</a></li>
-            <li><a href="contactos.html">Contactos</a></li>
-            <li class="tiene-submenu">
-                <a href="servicios.html">Servicios</a>
-                <ul class="submenu">
-                    <li><a href="inscripcion.html">Inscripción</a></li>
-                    <li><a href="cursos.html">Cursos</a></li>
-                    <li><a href="rutinas.html">Rutinas</a></li>
-                    <li><a href="maquinas.html">Máquinas</a></li>
-                    <li><a href="instructores.html">Instructores</a></li>
-                    <li><a href="mantenimiento.html">Mantenimiento</a></li>
-                    <li><a href="desinscribirse.html">Desinscribirse</a></li>
-                </ul>
-            </li>
-            <li><a href="blog.html">Blog</a></li>
-        </ul>
-    </nav>
+    <div class="contenedor-header">
+        <h1>Gimnasio Grupo 2</h1>
+        <nav aria-label="Navegación principal">
+            <ul class="menu-principal">
+                <li><a href="index.html">Inicio</a></li>
+                <li><a href="contactos.html">Contactos</a></li>
+                <li class="tiene-submenu">
+                    <a href="servicios.html">Servicios</a>
+                    <ul class="submenu">
+                        <li><a href="inscripcion.html">Inscripción</a></li>
+                        <li><a href="cursos.html">Cursos</a></li>
+                        <li><a href="rutinas.html">Rutinas</a></li>
+                        <li><a href="maquinas.html">Máquinas</a></li>
+                        <li><a href="instructores.html">Instructores</a></li>
+                        <li><a href="mantenimiento.html">Mantenimiento</a></li>
+                        <li><a href="desinscribirse.html">Desinscribirse</a></li>
+                    </ul>
+                </li>
+                <li><a href="blog.html">Blog</a></li>
+            </ul>
+        </nav>
+    </div>
 </header>
-
 <main>
     <section>
-        <h2>Desinscripción</h2>
-        <p>Próximamente: .</p>
+        <h2>Solicitud de desinscripción</h2>
+        <p>La desinscripción podrá completarse cuando el cliente se encuentre al día con sus pagos.</p>
+
+        <form action="#" method="post">
+            <label for="cedula_desinscripcion">Cédula</label>
+            <input type="text" id="cedula_desinscripcion" name="cedula" required pattern="[0-9]{9,12}" minlength="9" maxlength="12" inputmode="numeric" placeholder="112340567">
+
+            <label for="correo_desinscripcion">Correo electrónico</label>
+            <input type="email" id="correo_desinscripcion" name="correo" required maxlength="120" autocomplete="email">
+
+            <label for="motivo">Motivo de la desinscripción</label>
+            <textarea id="motivo" name="motivo" rows="4" required minlength="10" maxlength="300"></textarea>
+
+            <label class="opcion-check">
+                <input type="checkbox" name="confirmacion" required>
+                Confirmo que deseo solicitar la desinscripción.
+            </label>
+
+            <button type="submit">Enviar solicitud</button>
+        </form>
     </section>
+
+    <aside class="nota-informativa">
+        <h2>Requisito de desinscripción</h2>
+        <p>Para completar la desinscripción, el cliente debe encontrarse al día con sus pagos.</p>
+    </aside>
 </main>
-
 <footer>
-    <p>&copy; 2026 Gimnasio Grupo N - Programación 4</p>
+    <p>&copy; 2026 Gimnasio Grupo 2 - Programación 4</p>
 </footer>
-
 </body>
 </html>

@@ -3,92 +3,74 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Rutinas - Gimnasio Grupo 2</title>
+    <title>Gimnasio Grupo 2 - Rutinas</title>
+    <link rel="stylesheet" href="css/style.css">
     <link rel="stylesheet" href="css/style2.css">
 </head>
 <body>
-
 <header>
-    <h1>Gimnasio Grupo 2</h1>
-    <nav>
-        <ul class="menu-principal">
-            <li><a href="index.html">Inicio</a></li>
-            <li><a href="contactos.html">Contactos</a></li>
-            <li class="tiene-submenu">
-                <a href="servicios.html">Servicios</a>
-                <ul class="submenu">
-                    <li><a href="inscripcion.html">Inscripción</a></li>
-                    <li><a href="cursos.html">Cursos</a></li>
-                    <li><a href="rutinas.html">Rutinas</a></li>
-                    <li><a href="maquinas.html">Máquinas</a></li>
-                    <li><a href="instructores.html">Instructores</a></li>
-                    <li><a href="mantenimiento.html">Mantenimiento</a></li>
-                    <li><a href="desinscribirse.html">Desinscribirse</a></li>
-                </ul>
-            </li>
-            <li><a href="blog.html">Blog</a></li>
-        </ul>
-    </nav>
+    <div class="contenedor-header">
+        <h1>Gimnasio Grupo 2</h1>
+        <nav aria-label="Navegación principal">
+            <ul class="menu-principal">
+                <li><a href="index.html">Inicio</a></li>
+                <li><a href="contactos.html">Contactos</a></li>
+                <li class="tiene-submenu">
+                    <a href="servicios.html">Servicios</a>
+                    <ul class="submenu">
+                        <li><a href="inscripcion.html">Inscripción</a></li>
+                        <li><a href="cursos.html">Cursos</a></li>
+                        <li><a href="rutinas.html">Rutinas</a></li>
+                        <li><a href="maquinas.html">Máquinas</a></li>
+                        <li><a href="instructores.html">Instructores</a></li>
+                        <li><a href="mantenimiento.html">Mantenimiento</a></li>
+                        <li><a href="desinscribirse.html">Desinscribirse</a></li>
+                    </ul>
+                </li>
+                <li><a href="blog.html">Blog</a></li>
+            </ul>
+        </nav>
+    </div>
 </header>
-
 <main>
-    <h2>Consulta de Rutinas Personalizadas</h2>
-
-    <!-- Formulario de inicio de seccion posiblemente se tenga que retirar a una pagina apaerte -->
-    <section class="login-box">
-        <h3>Ingreso al Sistema</h3>
-        <form action="#" method="POST">
-            <div class="form-grupo">
-                <label for="usuario">Usuario (Cédula o Código):</label>
-                <input type="text" id="usuario" name="usuario" required placeholder="Ingrese su usuario">
-            </div>
-            <div class="form-grupo">
-                <label for="password">Contraseña:</label>
-                <input type="password" id="password" name="password" required>
-            </div>
-            <button type="submit">Iniciar Sesión</button>
-        </form>
-    </section>
-
-    <!-- Visualización de datos de la tabla RUTINAS -->
     <section>
-        <h3>Mis Rutinas Asignadas</h3>
-        <table>
-            <thead>
-                <tr>
-                    <th>ID Rutina</th>
-                    <th>Cédula Cliente</th>
-                    <th>Cód. Instructor</th>
-                    <th>ID Máquina</th>
-                    <th>Fecha</th>
-                    <th>Horas</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr>
-                    <td>1</td>
-                    <td>112340567</td>
-                    <td>501</td>
-                    <td>2 (Prensa)</td>
-                    <td>2026-09-08</td>
-                    <td>2 hrs</td>
-                </tr>
-                <tr>
-                    <td>2</td>
-                    <td>112340567</td>
-                    <td>502</td>
-                    <td>1 (Caminadora)</td>
-                    <td>2026-09-10</td>
-                    <td>1 hr</td>
-                </tr>
-            </tbody>
-        </table>
-    </section>
-</main>
+        <h2>Consulta de rutinas personalizadas</h2>
+        <div class="login-box">
+            <h3>Ingreso del cliente</h3>
+            <form action="#" method="post">
+                <label for="usuario">Usuario</label>
+                <input type="text" id="usuario" name="usuario" required minlength="4" maxlength="30" placeholder="Cédula o código" autocomplete="username">
 
+                <label for="password">Contraseña</label>
+                <input type="password" id="password" name="password" required minlength="6" maxlength="60" autocomplete="current-password">
+
+                <button type="submit">Iniciar sesión</button>
+            </form>
+        </div>
+    </section>
+
+    <section aria-labelledby="rutinas-asignadas">
+        <h2 id="rutinas-asignadas">Mis rutinas asignadas</h2>
+        <div class="tabla-responsive">
+            <table>
+                <thead>
+                    <tr><th>ID</th><th>Cliente</th><th>Instructor</th><th>Máquina</th><th>Fecha</th><th>Duración</th></tr>
+                </thead>
+                <tbody>
+                    <tr><td>1</td><td>112340567</td><td>501</td><td>Prensa de piernas</td><td>08/09/2026</td><td>2 horas</td></tr>
+                    <tr><td>2</td><td>112340567</td><td>502</td><td>Caminadora</td><td>10/09/2026</td><td>1 hora</td></tr>
+                </tbody>
+            </table>
+        </div>
+    </section>
+
+    <aside class="nota-informativa">
+        <h2>Rutinas personalizadas</h2>
+        <p>Las rutinas se asignan de acuerdo con los objetivos y necesidades de cada cliente.</p>
+    </aside>
+</main>
 <footer>
     <p>&copy; 2026 Gimnasio Grupo 2 - Programación 4</p>
 </footer>
-
 </body>
 </html>

@@ -3,44 +3,61 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Gimnasio - Instructores</title>
+    <title>Gimnasio Grupo 2 - Instructores</title>
     <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
-
 <header>
-    <h1>Gimnasio Grupo 2 - Instructores</h1>
-    <nav>
-        <ul class="menu-principal">
-            <li><a href="index.html">Inicio</a></li>
-            <li><a href="contactos.html">Contactos</a></li>
-            <li class="tiene-submenu">
-                <a href="servicios.html">Servicios</a>
-                <ul class="submenu">
-                    <li><a href="inscripcion.html">Inscripción</a></li>
-                    <li><a href="cursos.html">Cursos</a></li>
-                    <li><a href="rutinas.html">Rutinas</a></li>
-                    <li><a href="maquinas.html">Máquinas</a></li>
-                    <li><a href="instructores.html">Instructores</a></li>
-                    <li><a href="mantenimiento.html">Mantenimiento</a></li>
-                    <li><a href="desinscribirse.html">Desinscribirse</a></li>
-                </ul>
-            </li>
-            <li><a href="blog.html">Blog</a></li>
-        </ul>
-    </nav>
+    <div class="contenedor-header">
+        <h1>Gimnasio Grupo 2</h1>
+        <nav aria-label="Navegación principal">
+            <ul class="menu-principal">
+                <li><a href="index.html">Inicio</a></li>
+                <li><a href="contactos.html">Contactos</a></li>
+                <li class="tiene-submenu">
+                    <a href="servicios.html">Servicios</a>
+                    <ul class="submenu">
+                        <li><a href="inscripcion.html">Inscripción</a></li>
+                        <li><a href="cursos.html">Cursos</a></li>
+                        <li><a href="rutinas.html">Rutinas</a></li>
+                        <li><a href="maquinas.html">Máquinas</a></li>
+                        <li><a href="instructores.html">Instructores</a></li>
+                        <li><a href="mantenimiento.html">Mantenimiento</a></li>
+                        <li><a href="desinscribirse.html">Desinscribirse</a></li>
+                    </ul>
+                </li>
+                <li><a href="blog.html">Blog</a></li>
+            </ul>
+        </nav>
+    </div>
 </header>
-
 <main>
     <section>
         <h2>Instructores</h2>
-        <p>Próximamente: listado de Instructores disponibles en el gimnasio.</p>
+        <p>Conoce al equipo de instructores y sus principales áreas de acompañamiento.</p>
+        <div class="tarjetas-catalogo instructores-grid">
+            <article>
+                <img src="img/instructor1.svg" alt="Imagen ilustrativa del instructor Carlos Rojas">
+                <div><h3>Carlos Rojas</h3><p>Entrenamiento funcional y acondicionamiento.</p></div>
+            </article>
+            <article>
+                <img src="img/instructor2.svg" alt="Imagen ilustrativa de la instructora Laura Gómez">
+                <div><h3>Laura Gómez</h3><p>Clases grupales, movilidad y Pilates.</p></div>
+            </article>
+            <article>
+                <img src="img/instructor3.svg" alt="Imagen ilustrativa del instructor Daniel Vargas">
+                <div><h3>Daniel Vargas</h3><p>Fuerza, pesas y acompañamiento de rutinas.</p></div>
+            </article>
+        </div>
     </section>
-</main>
 
+    <aside class="nota-informativa">
+        <h2>Acompañamiento</h2>
+        <p>Nuestros instructores orientan a los clientes según sus objetivos, nivel de experiencia y tipo de entrenamiento.</p>
+    </aside>
+</main>
 <footer>
     <p>&copy; 2026 Gimnasio Grupo 2 - Programación 4</p>
 </footer>
-
 </body>
 </html>
