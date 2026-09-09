@@ -3,13 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Gimnasio - Inscripcion</title>
-    <link rel="stylesheet" href="css/style.css">
+    <title>Inscripción - Gimnasio Grupo 2</title>
+    <link rel="stylesheet" href="css/style2.css">
 </head>
 <body>
 
 <header>
-    <h1>Gimnasio Grupo 2- Inscripcioon</h1>
+    <h1>Gimnasio Grupo 2</h1>
     <nav>
         <ul class="menu-principal">
             <li><a href="index.html">Inicio</a></li>
@@ -32,10 +32,82 @@
 </header>
 
 <main>
-    <section>
-        <h2>Inscripción</h2>
-        <p>Próximamente: Formulario  de inscripción del gimnasio.</p>
-    </section>
+    <h2>Formulario de Inscripción de Clientes</h2>
+    <form action="http://localhost:8080/api/inscripcion" method="POST">
+        
+        <!-- datos de la tabla cliente -->
+        <div class="form-grupo">
+            <label for="cedula">Cédula:</label>
+            <input type="number" id="cedula" name="cedula" required placeholder="ej: 112340567">
+        </div>
+
+        <div class="form-row">
+            <div class="form-grupo">
+                <label for="nombre">Nombre:</label>
+                <input type="text" id="nombre" name="nombre" required>
+            </div>
+            <div class="form-grupo">
+                <label for="apellido_1">Primer Apellido:</label>
+                <input type="text" id="apellido_1" name="apellido_1" required>
+            </div>
+            <div class="form-grupo">
+                <label for="apellido_2">Segundo Apellido:</label>
+                <input type="text" id="apellido_2" name="apellido_2" required>
+            </div>
+        </div>
+
+        <div class="form-row">
+            <div class="form-grupo">
+                <label for="e_mail">Correo Electronico (Opcional):</label>
+                <input type="email" id="e_mail" name="e_mail">
+            </div>
+            <div class="form-grupo">
+                <label for="fecha_inscripcion">Fecha de Inscripcion:</label>
+                <input type="date" id="fecha_inscripcion" name="fecha_inscripcion" required>
+            </div>
+        </div>
+
+        <div class="form-grupo">
+            <label for="direccion">Dirección (Opcional):</label>
+            <input type="text" id="direccion" name="direccion">
+        </div>
+
+        <hr style="margin: 1.5rem 0;">
+
+        <h3>Tipo de Inscripción</h3>
+        
+        <div class="form-grupo">
+            <label for="tipo_inscripcion">Seleccione Opción:</label>
+            <select id="tipo_inscripcion" name="tipo_inscripcion" required>
+                <option value="">-- Seleccionar --</option>
+                <option value="curso">Inscribirse a un Curso</option>
+                <option value="rutina">Asignar una Rutina</option>
+            </select>
+        </div>
+
+        <div class="form-grupo">
+            <label for="id_curso">Seleccionar Curso (Tabla CURSOS):</label>
+            <select id="id_curso" name="id_curso">
+                <option value="">-- Cursos Disponibles --</option>
+                <option value="1">101 - Spin Class</option>
+                <option value="2">102 - Yoga & Pilates</option>
+                <option value="3">103 - CrossFit</option>
+            </select>
+        </div>
+
+        <div class="form-grupo">
+            <label for="id_maquina">Seleccionar Maquina para Rutina (Tabla MAQUINAS):</label>
+            <select id="id_maquina" name="id_maquina">
+                <option value="">-- Maquinas Disponibles --</option>
+                <option value="1">1 - Caminadora Pro</option>
+                <option value="2">2 - Prensa de Piernas</option>
+                <option value="3">3 - Barra Olimpica</option>
+            </select>
+        </div>
+
+        <button type="submit">Completar Inscripción</button>
+    </form>
+</main>
 
 <footer>
     <p>&copy; 2026 Gimnasio Grupo 2 - Programación 4</p>
