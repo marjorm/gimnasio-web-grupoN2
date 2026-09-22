@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gimnasio Grupo 2 - Inscripción</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/style2.css">
+</head>
+<body>
+<header>
+    <div class="contenedor-header">
+        <h1>Gimnasio Grupo 2</h1>
+        <nav aria-label="Navegación principal">
+            <ul class="menu-principal">
+                <li><a href="index.html">Inicio</a></li>
+                <li><a href="contactos.html">Contactos</a></li>
+                <li class="tiene-submenu">
+                    <a href="servicios.html">Servicios</a>
+                    <ul class="submenu">
+                        <li><a href="inscripcion.html">Inscripción</a></li>
+                        <li><a href="cursos.html">Cursos</a></li>
+                        <li><a href="rutinas.html">Rutinas</a></li>
+                        <li><a href="maquinas.html">Máquinas</a></li>
+                        <li><a href="instructores.html">Instructores</a></li>
+                        <li><a href="mantenimiento.html">Mantenimiento</a></li>
+                        <li><a href="desinscribirse.html">Desinscribirse</a></li>
+                    </ul>
+                </li>
+                <li><a href="blog.html">Blog</a></li>
+            </ul>
+        </nav>
+    </div>
+</header>
+<main>
+    <section>
+        <h2>Formulario de inscripción</h2>
+        <p>Completa los datos solicitados y selecciona el tipo de inscripción.</p>
+
+        <form action="#" method="post">
+            <fieldset>
+                <legend>Datos del cliente</legend>
+
+                <label for="cedula">Cédula</label>
+                <input type="text" id="cedula" name="cedula" required pattern="[0-9]{9,12}" minlength="9" maxlength="12" placeholder="112340567" inputmode="numeric">
+
+                <label for="nombre">Nombre</label>
+                <input type="text" id="nombre" name="nombre" required minlength="2" maxlength="50" autocomplete="given-name">
+
+                <label for="apellido_1">Primer apellido</label>
+                <input type="text" id="apellido_1" name="apellido_1" required minlength="2" maxlength="50" autocomplete="family-name">
+
+                <label for="apellido_2">Segundo apellido</label>
+                <input type="text" id="apellido_2" name="apellido_2" minlength="2" maxlength="50">
+
+                <label for="e_mail">Correo electrónico</label>
+                <input type="email" id="e_mail" name="e_mail" required maxlength="120" autocomplete="email">
+
+                <label for="telefono_inscripcion">Teléfono</label>
+                <input type="tel" id="telefono_inscripcion" name="telefono" required pattern="[0-9]{4}-?[0-9]{4}" placeholder="8888-8888" autocomplete="tel">
+
+                <label for="edad">Edad</label>
+                <input type="number" id="edad" name="edad" required min="15" max="100">
+
+                <label for="fecha_inscripcion">Fecha de inscripción</label>
+                <input type="date" id="fecha_inscripcion" name="fecha_inscripcion" required>
+
+                <label for="direccion">Dirección</label>
+                <textarea id="direccion" name="direccion" rows="3" required minlength="10" maxlength="200"></textarea>
+            </fieldset>
+
+            <fieldset>
+                <legend>Tipo de inscripción</legend>
+
+                <label for="tipo_inscripcion">Seleccione una opción</label>
+                <select id="tipo_inscripcion" name="tipo_inscripcion" required>
+                    <option value="">-- Seleccionar --</option>
+                    <option value="curso">Inscribirse a un curso</option>
+                    <option value="rutina">Asignar una rutina</option>
+                </select>
+
+                <label for="id_curso">Curso</label>
+                <select id="id_curso" name="id_curso">
+                    <option value="">-- Cursos disponibles --</option>
+                    <option value="101">101 - Spinning intensivo</option>
+                    <option value="102">102 - Yoga y Pilates</option>
+                    <option value="103">103 - Acondicionamiento funcional</option>
+                </select>
+
+                <label for="id_maquina">Máquina para rutina</label>
+                <select id="id_maquina" name="id_maquina">
+                    <option value="">-- Máquinas disponibles --</option>
+                    <option value="1">1 - Caminadora</option>
+                    <option value="2">2 - Prensa de piernas</option>
+                    <option value="3">3 - Banco de pesas</option>
+                </select>
+            </fieldset>
+
+            <button type="submit">Completar inscripción</button>
+        </form>
+    </section>
+
+    <aside class="nota-informativa">
+        <h2>Antes de inscribirte</h2>
+        <p>Verifica que tus datos personales y de contacto sean correctos antes de completar la inscripción.</p>
+    </aside>
+</main>
+<footer>
+    <p>&copy; 2026 Gimnasio Grupo 2 - Programación 4</p>
+</footer>
+</body>
+</html>
