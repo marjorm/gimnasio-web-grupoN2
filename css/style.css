@@ -378,3 +378,52 @@ code {
         padding: 1.25rem 0;
     }
 }
+
+.campo-invalido {
+    border: 2px solid #c0392b;
+    background-color: #fdecea;
+}
+
+.campo-valido {
+    border: 2px solid #27ae60;
+    background-color: #eafaf1;
+}
+
+.mensaje-error {
+    color: #c0392b;
+    font-size: 0.85rem;
+    margin-top: 0.25rem;
+    display: block;
+}
+
+.toast {
+    position: fixed;
+    bottom: 2rem;
+    right: 2rem;
+    padding: 1rem 1.5rem;
+    border-radius: 6px;
+    color: white;
+    font-weight: bold;
+    opacity: 0;
+    transform: translateY(20px);
+    transition: opacity 0.3s, transform 0.3s;
+    pointer-events: none;
+    z-index: 100;
+}
+
+.toast.visible {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.toast.success {
+    background-color: #27ae60;
+}
+
+.toast.error {
+    background-color: #c0392b;
+}
+
+.oculto {
+    display: none;
+}
