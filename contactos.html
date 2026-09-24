@@ -52,20 +52,45 @@
 
     <section aria-labelledby="consulta-titulo">
         <h2 id="consulta-titulo">Formulario de consulta</h2>
-        <form action="#" method="post">
-            <label for="nombre">Nombre completo</label>
-            <input type="text" id="nombre" name="nombre" required minlength="3" maxlength="80" autocomplete="name">
+        <form id="form-contacto" action="#" method="post">
+            <div>
+                <label for="nombre">Nombre completo</label>
+                <input type="text" id="nombre" name="nombre" required minlength="3" maxlength="80" autocomplete="name">
+            </div>
 
-            <label for="email">Correo electrónico</label>
-            <input type="email" id="email" name="email" required maxlength="120" autocomplete="email">
+            <div>
+                <label for="email">Correo electrónico</label>
+                <input type="email" id="email" name="email" required maxlength="120" autocomplete="email">
+            </div>
 
-            <label for="telefono">Teléfono</label>
-            <input type="tel" id="telefono" name="telefono" pattern="[0-9]{4}-?[0-9]{4}" placeholder="8888-8888" required autocomplete="tel">
+            <div>
+                <label for="telefono">Teléfono</label>
+                <input type="tel" id="telefono" name="telefono" pattern="[0-9]{4}-?[0-9]{4}" placeholder="8888-8888" required autocomplete="tel">
+            </div>
 
-            <label for="mensaje">Mensaje</label>
-            <textarea id="mensaje" name="mensaje" rows="5" required minlength="10" maxlength="500"></textarea>
+            <div>
+                <label for="asunto">Motivo de consulta</label>
+                <select id="asunto" name="asunto" required>
+                    <option value="">-- Seleccione un motivo --</option>
+                    <option value="General">Consulta General</option>
+                    <option value="Inscripcion">Información de Inscripción</option>
+                    <option value="Mantenimiento">Reporte o Mantenimiento</option>
+                    <option value="Otro">Otro / Especificar</option>
+                </select>
+            </div>
 
-            <button type="submit">Enviar consulta</button>
+            <!-- Contenedor dinámico donde JS creará o eliminará el campo de motivo personalizado -->
+            <div id="contenedor-motivo-otro"></div>
+
+            <div>
+                <label for="mensaje">Mensaje</label>
+                <textarea id="mensaje" name="mensaje" rows="5" required minlength="10" maxlength="500"></textarea>
+            </div>
+
+            <div class="acciones-form">
+                <button type="submit">Enviar consulta</button>
+                <button type="button" id="btn-limpiar" class="btn-secundario">Limpiar borrador</button>
+            </div>
         </form>
     </section>
 
