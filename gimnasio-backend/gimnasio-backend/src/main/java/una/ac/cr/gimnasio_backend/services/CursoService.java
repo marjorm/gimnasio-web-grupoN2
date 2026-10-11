@@ -4,15 +4,11 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import una.ac.cr.gimnasio_backend.models.Curso;
 import una.ac.cr.gimnasio_backend.repositories.CursoRepository;
+import una.ac.cr.gimnasio_backend.exceptions.CursoNotFoundException;
 
 import java.util.List;
 
 
-/**
- * Aplica el patrón Singleton administrado por Spring Boot, garantizando que el
- * contenedor IoC cree y comparta una única instancia en memoria de esta clase
- * para toda la aplicación.
- */
 @Service
 public class CursoService {
 
@@ -30,7 +26,8 @@ public class CursoService {
     @Transactional(readOnly = true)
     public Curso obtenerPorId(Integer id) {
         return cursoRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Curso no encontrado con el ID: " + id));
+                .orElseThrow(() -> new CursoNotFoundException(
+                        "Curso no encontrado con el ID: " + id));
     }
 
     @Transactional

@@ -1,17 +1,15 @@
 package una.ac.cr.gimnasio_backend.services;
 
+
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import una.ac.cr.gimnasio_backend.models.Cliente;
 import una.ac.cr.gimnasio_backend.repositories.ClienteRepository;
+import una.ac.cr.gimnasio_backend.exceptions.ClienteNotFoundException;
 
 import java.util.List;
 
-/**
- * Aplica el patrón Singleton administrado por Spring Boot, garantizando que el
- * contenedor IoC cree y comparta una única instancia en memoria de esta clase
- * para toda la aplicación.
- */
+
 @Service
 public class ClienteService {
 
@@ -32,9 +30,9 @@ public class ClienteService {
     @Transactional(readOnly = true)
     public Cliente obtenerPorCedula(Integer cedula) {
         return clienteRepository.findById(cedula)
-                .orElseThrow(() -> new RuntimeException("Cliente no encontrado con la cédula: " + cedula));
+                .orElseThrow(() -> new ClienteNotFoundException(
+                        "Cliente no encontrado con la cédula: " + cedula));
     }
-
     @Transactional
     public Cliente guardarCliente(Cliente cliente) {
         return clienteRepository.save(cliente);

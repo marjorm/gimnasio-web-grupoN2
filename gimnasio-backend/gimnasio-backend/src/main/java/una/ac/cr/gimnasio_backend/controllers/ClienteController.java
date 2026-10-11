@@ -4,6 +4,7 @@ package una.ac.cr.gimnasio_backend.controllers;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import jakarta.validation.Valid;
 import una.ac.cr.gimnasio_backend.models.Cliente;
 import una.ac.cr.gimnasio_backend.services.ClienteService;
 
@@ -11,7 +12,7 @@ import java.util.List;
 import java.util.Map;
 
 @RestController
-@RequestMapping("/api")
+@RequestMapping("/api/clientes")
 public class ClienteController {
     private final ClienteService clienteService;
 
@@ -33,7 +34,7 @@ public class ClienteController {
     }
 
     @PostMapping
-    public ResponseEntity<Cliente> guardarCliente(@RequestBody Cliente cliente) {
+    public ResponseEntity<Cliente> guardarCliente( @Valid @RequestBody Cliente cliente) {
         Cliente nuevoCliente = clienteService.guardarCliente(cliente);
         return ResponseEntity.status(HttpStatus.CREATED).body(nuevoCliente);
     }
@@ -41,7 +42,7 @@ public class ClienteController {
     @PutMapping("/{cedula}")
     public ResponseEntity<Cliente> actualizarCliente(
             @PathVariable Integer cedula,
-            @RequestBody Cliente clienteDetalles) {
+            @Valid @RequestBody Cliente clienteDetalles) {
         Cliente clienteActualizado = clienteService.actualizarCliente(cedula, clienteDetalles);
         return ResponseEntity.ok(clienteActualizado);
     }
