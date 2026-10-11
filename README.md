@@ -1,68 +1,147 @@
-# Sistema Web Gimnasio - Grupo 2
+# Backend del Sistema Web Gimnasio — Guía de pruebas (Entregable 4)
 
-Proyecto de Programación 4 (II Semestre 2026) - Universidad Nacional.
-
-El proyecto consiste en desarrollar un sistema web para la gestión de un gimnasio utilizando HTML5, CSS3, JavaScript, Java/Spring, React, servicios web y autenticación/autorización según las entregas definidas en el curso.
+Backend en **Java + Spring Boot** con **JPA/Hibernate** y **MySQL**. Esta guía explica cómo levantarlo y cómo comprobar, paso a paso, que cada funcionalidad responde como se espera.
 
 ## Integrantes
+- Maria Ramirez Elizondo - Lider
+- Roberto Chavarria Garcia - Desarrollador Backend,frontend, documentacion
+- Antonio Scala González - Desarrollador Backend,frontend, documentacion
+- Cristopher Madrigal Masis - Desarrollador Backend,frontend, documentacion
 
-- Maria Ramirez Elizondo - Líder / desarrollo
-- Roberto Chavarria Garcia - Desarrollo backend, frontend y documentación
-- Antonio Scala González - Desarrollo backend, frontend y documentación
-- Cristopher Madrigal Masis - Desarrollo backend, frontend y documentación
+### Acceso al repositorio
+git clone https://github.com/marjorm/gimnasio-web-grupoN2.git
 
-## Requisitos del ambiente
+## 1. Requisitos
 
-- XAMPP (Apache + MySQL)
-- JDK 26
-- IntelliJ IDEA
-- Node.js LTS, requerido para el frontend React de entregas posteriores
+- XAMPP con **MySQL** encendido (y Apache, si se va a probar también el frontend).
+- JDK 26 e IntelliJ IDEA.
+- La base de datos `gimnasio` creada en phpMyAdmin.
 
-## Entregable 2 - Frontend estático HTML5 + CSS3
+## 2. Preparar y levantar el backend
 
-Las páginas del Entregable 2 se encuentran en la raíz del repositorio:
+1. En **XAMPP Control Panel**, dar **Start** a **MySQL**.
+2. Entrar a `http://localhost/phpmyadmin/` y verificar que existe la base `gimnasio`. Si no existe: pestaña **Bases de datos** → nombre `gimnasio` → **Crear**, se recomienda usar la base de datos que se adjunto con el proyecto.
+4. Abrir la carpeta `gimnasio-backend` en IntelliJ.
+    - Si el botón ▶ está deshabilitado: clic derecho sobre `pom.xml` → **Add as Maven Project**.
+5. Ejecutar la clase `GimnasioBackendApplication`.
+6. En la consola debe aparecer `Tomcat started on port 8080` y `Started GimnasioBackendApplication`. El backend queda en **http://localhost:8080**.
 
-- `index.html`
-- `contactos.html`
-- `servicios.html`
-- `blog.html`
-- `inscripcion.html`
-- `cursos.html`
-- `rutinas.html`
-- `maquinas.html`
-- `instructores.html`
-- `mantenimiento.html`
-- `desinscribirse.html`
+**Comprobación rápida:** abrir `http://localhost:8080/api/health` → debe responder `{"status":"ok"}`.
 
-Los estilos se cargan desde `css/style.css` y `css/style2.css`. No es necesario ejecutar React ni Spring Boot para revisar el Entregable 2.
+## 3. Cómo hacer las pruebas
 
-### Ejecutar el Entregable 2 con XAMPP/Apache
+**GET:** se pueden probar directamente escribiendo la URL en el navegador.
 
-1. Instalar XAMPP y abrir **XAMPP Control Panel**.
-2. Iniciar el servicio **Apache**.
-3. Copiar o clonar el repositorio dentro de la carpeta `C:\xampp\htdocs\gimnasio-web-grupoN2`.
-4. Abrir el navegador y visitar `http://localhost/gimnasio-web-grupoN2/`.
-5. Verificar que el menú permita navegar por Inicio, Contactos, Servicios y Blog y por todas las opciones del submenú Servicios.
+**POST, PUT y DELETE:** se prueban con el cliente HTTP de IntelliJ:
 
-No se deben abrir las páginas mediante doble clic sobre los archivos HTML; la aplicación estática debe servirse mediante Apache.
+1. Clic derecho en la carpeta del proyecto → **New → HTTP Request** → nombrar el archivo `pruebas.http`.
+2. Pegar las peticiones de esta guía. Cada una tiene un botón ▶ verde a la izquierda.
+3. El resultado aparece abajo, con el **código de estado** y el JSON de respuesta.
 
-## Backend inicial - Entregable 1
+> Para escribir el cuerpo (JSON) de un POST o PUT, lo más seguro es **copiar la forma del JSON que devuelve el GET** de ese mismo recurso y cambiar los valores.
 
-1. Abrir `gimnasio-backend/gimnasio-backend` en IntelliJ IDEA.
-2. Ejecutar `GimnasioBackendApplication`.
-3. Visitar `http://localhost:8080/api/health`.
-4. La respuesta esperada es `{"status":"ok"}`.
+## 4. Recursos disponibles
 
-## Frontend React inicial - Entregable 1
+| Recurso | Ruta base | GET lista | GET por id | POST | PUT | DELETE |
+|---|---|---|---|---|---|---|
+| Cursos | `/api/cursos` | Sí | `/{id}` | Sí | `/{id}` | `/{id}` |
+| Clientes | `/api/clientes` | Sí | `/{cedula}` | Sí | `/{cedula}` | `/{cedula}` |
+| Instructores | `/api/instructores` | Sí | `/{id}` | Sí | `/{id}` | `/{id}` |
+| Máquinas | `/api/maquinas` | Sí | `/{id}` | Sí | `/{id}` | `/{id}` |
+| Rutinas | `/api/rutinas` | Sí | `/{id}` | Sí | `/{id}` | `/{id}` |
 
-La carpeta `gimnasio-frontend` contiene el proyecto React inicial que se utilizará en una entrega posterior para convertir las vistas principales en una SPA.
+## 5. Pruebas del CRUD (ejemplo con Cursos)
 
-```bash
-cd gimnasio-frontend
-npm install
-npm run dev
+El mismo conjunto de pruebas se repite para cada recurso, cambiando la ruta y el cuerpo.
+
+```http
+### 1. Listar -> 200 OK
+GET http://localhost:8080/api/cursos
+
+### 2. Obtener uno que existe -> 200 OK
+GET http://localhost:8080/api/cursos/<id existente>
+
+### 3. Obtener uno que NO existe -> 404 Not Found
+GET http://localhost:8080/api/cursos/99999
+
+### 4. Crear -> 201 Created
+POST http://localhost:8080/api/cursos
+Content-Type: application/json
+
+{ "id": 201, "descripcion": "Pilates avanzado" }
+
+### 5. Actualizar -> 200 OK
+PUT http://localhost:8080/api/cursos/201
+Content-Type: application/json
+
+{ "id": 201, "descripcion": "Pilates intermedio" }
+
+### 6. Eliminar -> 200 OK o 204 No Content
+DELETE http://localhost:8080/api/cursos/201
 ```
 
-## Flujo de trabajo con GitHub
+**Verificación en la base de datos:** después de crear, actualizar o eliminar, abrir phpMyAdmin → base `gimnasio` → tabla correspondiente, y comprobar que el cambio quedó guardado.
 
-Los cambios deben realizarse en ramas de trabajo y enviarse a la rama principal mediante Pull Request. La rama principal no debe recibir commits directos. Cada integrante debe mantener contribuciones sustantivas y verificables en el repositorio durante cada entregable.
+
+
+## 6. Validación de datos
+
+El servidor valida con `@Valid`, `@NotNull`, `@NotBlank`, `@Size`, `@Pattern` y `@Email`. Probar enviando datos incorrectos:
+
+```http
+### Descripción vacía -> 400 con el detalle del campo
+POST http://localhost:8080/api/cursos
+Content-Type: application/json
+
+{ "id": 202, "descripcion": "" }
+
+### Correo con formato inválido -> 400
+POST http://localhost:8080/api/clientes
+Content-Type: application/json
+
+{ "id": 111111111, "nombre": "Ana", "apellido1": "Mora", "apellido2": "Soto", "email": "esto-no-es-correo", "fechaInscripcion": "2026-10-01" }
+```
+
+**Resultado esperado:** código **400** y un mensaje que indica **qué campo** está mal. El registro **no** se guarda.
+
+## 7. Manejo de errores
+
+Un `@ControllerAdvice` captura las excepciones y responde con un mensaje claro. Probar:
+
+```http
+### Ruta inexistente -> 500 con mensaje claro
+GET http://localhost:8080/api/esto-no-existe
+
+### JSON mal formado -> 400
+POST http://localhost:8080/api/cursos
+Content-Type: application/json
+
+{ esto no es json
+
+### Id con letras -> 400
+GET http://localhost:8080/api/cursos/abc
+```
+
+**Resultado esperado:** en ningún caso aparecen trazas de Java (`at una.ac.cr...`), mensajes de MySQL ni la página `Whitelabel Error Page`.
+
+
+## 8. Arquitectura del backend
+
+```
+una.ac.cr.gimnasio_backend
+├── controllers/    Reciben las peticiones HTTP y devuelven JSON
+├── services/       Interfaces con la lógica de negocio
+├── repositories/   Acceso a datos con Spring Data JPA
+├── models/         Entidades JPA (@Entity) mapeadas a las tablas
+├── exceptions/     Excepciones propias y @ControllerAdvice
+```
+
+Flujo de una petición: **Controller → Service → Repository → MySQL**.
+
+
+## 9. Tecnologías y librerías
+
+- Java 26, Spring Boot 4.1.1
+- Spring Web MVC, Spring Data JPA (Hibernate), Bean Validation
+- MySQL (XAMPP) con MySQL Connector/J
+- Maven

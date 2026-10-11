@@ -1,4 +1,5 @@
 package una.ac.cr.gimnasio_backend.controllers;
+import jakarta.validation.Valid;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -30,13 +31,13 @@ public class CursoController {
     }
 
     @PostMapping
-    public ResponseEntity<Curso> guardarCurso(@RequestBody Curso curso) {
+    public ResponseEntity<Curso> guardarCurso(@Valid @RequestBody Curso curso) {
         Curso nuevoCurso = cursoService.guardarCurso(curso);
         return ResponseEntity.status(HttpStatus.CREATED).body(nuevoCurso);
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Curso> actualizarCurso(@PathVariable Integer id, @RequestBody Curso cursoDetalles) {
+    public ResponseEntity<Curso> actualizarCurso(@PathVariable Integer id, @Valid @RequestBody Curso cursoDetalles) {
         Curso cursoActualizado = cursoService.actualizarCurso(id, cursoDetalles);
         return ResponseEntity.ok(cursoActualizado);
     }
