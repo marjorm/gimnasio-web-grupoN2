@@ -266,3 +266,42 @@ main a:focus-visible {
 .pagina-no-encontrada a:hover {
     background-color: #12569b;
 }
+
+
+/* Contenedor responsivo para evitar que la tabla rompa el diseño en pantallas pequeñas */
+.tabla-responsive {
+    width: 100%;
+    overflow-x: auto;
+    margin-top: 15px;
+    background: #ffffff;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+/* Estilos generales para las tablas del sistema */
+table {
+    width: 100%;
+    border-collapse: collapse;
+    text-align: left;
+    font-size: 0.95rem;
+    color: #333333;
+}
+
+/* Espaciado y bordes limpios para los encabezados y celdas */
+th, td {
+    padding: 12px 16px;
+    border-bottom: 1px solid #e0e5eb;
+}
+
+/* Estilo para los encabezados */
+th {
+    background-color: #f8fafc;
+    color: #1e293b;
+    font-weight: bold;
+    border-bottom: 2px solid #cbd5e1;
+}
+
+
+tbody tr:hover {
+    background-color: #f1f5f9;
+}
