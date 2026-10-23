@@ -7,15 +7,20 @@ import Servicios from "./pages/Servicios.jsx";
 import PaginaPendiente from "./pages/PaginaPendiente.jsx";
 import Blog from "./pages/Blog.jsx";
 import NoEncontrada from "./pages/NoEncontrada.jsx";
+import { AuthProvider } from "./context/AuthContext.jsx";
+import ProtectedRoute from "./routes/ProtectedRoute.jsx";
+import Login from "./pages/Login.jsx";
 import "./App.css";
 
 function App() {
     return (
-        <Routes>
+        <AuthProvider>
+            <Routes>
             <Route element={<Layout />}>
                 <Route path="/" element={<Inicio />} />
                 <Route path="/contactos" element={<Contactos />} />
                 <Route path="/servicios" element={<Servicios />} />
+                <Route path="/login" element={<Login />} />
 
                 <Route
                     path="/blog"
@@ -44,7 +49,11 @@ function App() {
 
                 <Route
                     path="/mantenimiento"
-                    element={<PaginaPendiente nombre="Mantenimiento" />}
+                    element={
+                        <ProtectedRoute>
+                            <PaginaPendiente nombre="Mantenimiento" />
+                        </ProtectedRoute>
+                    }
                 />
 
                 <Route
@@ -57,7 +66,8 @@ function App() {
                     element={<NoEncontrada />}
                 />
             </Route>
-        </Routes>
+            </Routes>
+        </AuthProvider>
     );
 }
 
