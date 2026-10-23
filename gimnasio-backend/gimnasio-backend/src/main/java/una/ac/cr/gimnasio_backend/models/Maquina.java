@@ -20,6 +20,9 @@ public class Maquina {
     @Size(min = 3, max = 50, message = "La descripción debe tener entre 3 y 50 caracteres")
     @Column(name = "descripcion", nullable = false, length = 50)
     private String descripcion;
+    @Size(max = 15)
+    @Column(name = "estado", length = 15)
+    private String estado;
 
 
     public Integer getId() {
@@ -36,6 +39,14 @@ public class Maquina {
 
     public void setDescripcion(String descripcion) {
         this.descripcion = descripcion;
+    }
+
+    public String getEstado() {
+        return estado;
+    }
+
+    public void setEstado(String estado) {
+        this.estado = estado;
     }
 
 
