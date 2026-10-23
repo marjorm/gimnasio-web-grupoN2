@@ -4,6 +4,12 @@ import Layout from "./components/layout/Layout.jsx";
 import Inicio from "./pages/Inicio.jsx";
 import Contactos from "./pages/Contactos.jsx";
 import Servicios from "./pages/Servicios.jsx";
+
+import Cursos from "./pages/Cursos.jsx";
+import Rutinas from "./pages/Rutinas.jsx";
+import Maquinas from "./pages/Maquinas.jsx";
+import Instructores from "./pages/Instructores.jsx";
+
 import PaginaPendiente from "./pages/PaginaPendiente.jsx";
 import Blog from "./pages/Blog.jsx";
 import NoEncontrada from "./pages/NoEncontrada.jsx";
@@ -24,22 +30,22 @@ function App() {
 
                 <Route
                     path="/cursos"
-                    element={<PaginaPendiente nombre="Cursos" />}
+                    element={<Cursos />}
                 />
 
                 <Route
                     path="/rutinas"
-                    element={<PaginaPendiente nombre="Rutinas" />}
+                    element={<Rutinas />}
                 />
 
                 <Route
                     path="/maquinas"
-                    element={<PaginaPendiente nombre="Máquinas" />}
+                    element={<Maquinas />}
                 />
 
                 <Route
                     path="/instructores"
-                    element={<PaginaPendiente nombre="Instructores" />}
+                    element={<Instructores />}
                 />
 
                 <Route
