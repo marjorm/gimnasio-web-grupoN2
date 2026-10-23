@@ -17,7 +17,7 @@ export default function Instructores() {
                 const data = await instructorService.obtenerTodos();
                 setInstructores(data);
                 setError(null);
-            } catch (err) {
+            } catch {
                 setError('No se pudieron cargar los instructores desde el servidor. Comprueba la conexión.');
             } finally {
                 setLoading(false);
@@ -28,10 +28,10 @@ export default function Instructores() {
     }, []);
 
     // Arreglo de imagenes estaticas secundarias para mantener la estetica del HTML original
-const imagenesInstructores = ['/img/instructor1.svg', '/img/instructor2.svg', '/img/instructor3.svg'];
+    const imagenesInstructores = ['/img/instructor1.svg', '/img/instructor2.svg', '/img/instructor3.svg'];
 
     return (
-        <main>
+        <div>
             <section>
                 <h2>Instructores</h2>
                 <p>Conoce al equipo de instructores y sus principales áreas de acompañamiento obtenidas del sistema.</p>
@@ -51,8 +51,7 @@ const imagenesInstructores = ['/img/instructor1.svg', '/img/instructor2.svg', '/
                         <Tarjeta key={instructor.id} titulo={instructor.nombre}>
                             {/* Imagen estática de respaldo asignada por índice para conservar el diseño visual */}
                             <img 
-                               /* src={imagenesInstructores[index % imagenesInstructores.length]} */
-                               src={'/img/instructor1.svg'}
+                               src={imagenesInstructores[index % imagenesInstructores.length]}
                                 alt={`Ilustración de ${instructor.nombre}`} 
                                 style={{ width: 'auto', height: '140px', objectFit: 'cover', borderRadius: '4px', marginBottom: '10px' }}
                             />
@@ -67,6 +66,6 @@ const imagenesInstructores = ['/img/instructor1.svg', '/img/instructor2.svg', '/
                 <h2>Acompañamiento</h2>
                 <p>Nuestros instructores orientan a los clientes según sus objetivos, nivel de experiencia y tipo de entrenamiento.</p>
             </aside>
-        </main>
+        </div>
     );
 }

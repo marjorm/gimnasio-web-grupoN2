@@ -16,7 +16,7 @@ export default function Cursos() {
                 const data = await cursoService.obtenerTodos();
                 setCursos(data);
                 setError(null);
-            } catch (err) {
+            } catch {
                 setError('No se pudieron cargar los cursos desde el servidor. Comprueba la conexión.');
             } finally {
                 setLoading(false);
@@ -27,7 +27,7 @@ export default function Cursos() {
     }, []);
 
     return (
-        <main>
+        <div>
             <section>
                 <h2>Cursos disponibles</h2>
                 <p className="intro-seccion">Consulta nuestra oferta de cursos actualizados desde el sistema.</p>
@@ -58,6 +58,6 @@ export default function Cursos() {
                 <h2>Disponibilidad</h2>
                 <p>Los cupos y horarios pueden variar según la programación académica y la cantidad de personas inscritas.</p>
             </aside>
-        </main>
+        </div>
     );
 }

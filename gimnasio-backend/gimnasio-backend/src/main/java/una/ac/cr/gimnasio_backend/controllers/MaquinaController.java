@@ -10,7 +10,6 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/maquinas")
-@CrossOrigin(origins = "*")
 public class MaquinaController {
     private final MaquinaService service;
 

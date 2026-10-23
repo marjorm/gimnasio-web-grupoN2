@@ -22,7 +22,7 @@ export default function Rutinas() {
                 setRutinas(dataRutinas);
                 setClientes(dataClientes);
                 setError(null);
-            } catch (err) {
+            } catch {
                 setError('No se pudieron cargar las rutinas desde el servidor.');
             } finally {
                 setLoading(false);
@@ -38,7 +38,7 @@ export default function Rutinas() {
         : rutinas;
 
     return (
-        <main>
+        <div>
             <section>
                 <h2>Consulta de rutinas personalizadas</h2>
                 <p className="intro-seccion">
@@ -114,6 +114,6 @@ export default function Rutinas() {
                 <h2>Rutinas personalizadas</h2>
                 <p>Las rutinas se asignan de acuerdo con los objetivos y necesidades específicas de cada cliente inscrito.</p>
             </aside>
-        </main>
+        </div>
     );
 }

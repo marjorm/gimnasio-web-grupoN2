@@ -17,7 +17,7 @@ export default function Maquinas() {
                 const data = await maquinaService.obtenerTodas();
                 setMaquinas(data);
                 setError(null);
-            } catch (err) {
+            } catch {
                 setError('No se pudieron cargar las máquinas desde el servidor. Comprueba la conexión.');
             } finally {
                 setLoading(false);
@@ -28,7 +28,7 @@ export default function Maquinas() {
     }, []);
 
     return (
-        <main>
+        <div>
             <section>
                 <h2>Máquinas del gimnasio</h2>
                 <p>Conoce los equipos disponibles para entrenamiento cardiovascular, fuerza y acondicionamiento actualizados desde el sistema.</p>
@@ -57,6 +57,6 @@ export default function Maquinas() {
                 <h2>Uso de equipos</h2>
                 <p>Solicita orientación a un instructor antes de utilizar una máquina que no conozcas para evitar lesiones y asegurar un buen uso.</p>
             </aside>
-        </main>
+        </div>
     );
 }
