@@ -1,105 +1,148 @@
-import React, { useState, useEffect } from 'react';
-import { validarFormularioCliente } from '../../utils/validaciones';
+import { useState } from 'react';
+import { validarFormularioCliente } from '../../validaciones';
 
-const FormularioCliente = ({ clienteInicial, onSubmit, onCancelar }) => {
-    const [formData, setFormData] = useState({
-        nombre: '',
-        correo: '',
-        telefono: '',
-        ...clienteInicial
-    });
+const fechaHoy = () =>
+    new Date(Date.now() - new Date().getTimezoneOffset() * 60000)
+        .toISOString().slice(0, 10);
+
+export default function FormularioCliente({
+    clienteInicial,
+    onSubmit,
+    onCancelar
+}) {
+    const editando = Boolean(clienteInicial);
+
+    const [datos, setDatos] = useState(() => ({
+        id: String(clienteInicial?.id ?? ''),
+        nombre: clienteInicial?.nombre ?? '',
+        apellido1: clienteInicial?.apellido1 ?? '',
+        apellido2: clienteInicial?.apellido2 ?? '',
+        direccion: clienteInicial?.direccion ?? '',
+        eMail: clienteInicial?.eMail ?? clienteInicial?.email ?? '',
+        fechaInscripcion: clienteInicial?.fechaInscripcion ?? fechaHoy(),
+        celular: String(clienteInicial?.celular ?? ''),
+        telHabitacion: String(clienteInicial?.telHabitacion ?? '')
+    }));
 
     const [errores, setErrores] = useState({});
+    const [guardando, setGuardando] = useState(false);
 
-    useEffect(() => {
-        if (clienteInicial) {
-            setFormData({
-                nombre: clienteInicial.nombre || '',
-                correo: clienteInicial.correo || '',
-                telefono: clienteInicial.telefono || ''
-            });
+    const campos = [
+        { id: 'id', nombre: 'Cédula', requerido: true },
+        { id: 'nombre', nombre: 'Nombre', requerido: true },
+        { id: 'apellido1', nombre: 'Primer apellido', requerido: true },
+        { id: 'apellido2', nombre: 'Segundo apellido', requerido: true },
+        { id: 'direccion', nombre: 'Dirección' },
+        { id: 'eMail', nombre: 'Correo electrónico', tipo: 'email' },
+        {
+            id: 'fechaInscripcion',
+            nombre: 'Fecha de inscripción',
+            tipo: 'date',
+            requerido: true
+        },
+        { id: 'celular', nombre: 'Celular', requerido: true },
+        {
+            id: 'telHabitacion',
+            nombre: 'Teléfono habitación',
+            requerido: true
         }
-    }, [clienteInicial]);
+    ];
 
-    const handleChange = (e) => {
-        const { name, value } = e.target;
-        setFormData((prev) => ({
-            ...prev,
-            [name]: value
-        }));
-    };
+    const guardar = async (evento) => {
+        evento.preventDefault();
 
-    const handleSubmit = (e) => {
-        e.preventDefault();
-        const validaciones = validarFormularioCliente(formData);
-        if (Object.keys(validaciones).length > 0) {
-            setErrores(validaciones);
+        const encontrados = validarFormularioCliente(datos);
+        setErrores(encontrados);
+
+        if (Object.keys(encontrados).length > 0) {
             return;
         }
 
-        setErrores({});
-        onSubmit(formData);
+        const payload = {
+            ...datos,
+            id: Number(datos.id),
+            nombre: datos.nombre.trim(),
+            apellido1: datos.apellido1.trim(),
+            apellido2: datos.apellido2.trim(),
+            eMail: datos.eMail.trim() || null,
+            celular: Number(datos.celular),
+            telHabitacion: Number(datos.telHabitacion)
+        };
+
+        setGuardando(true);
+
+        try {
+            await onSubmit(payload);
+        } finally {
+            setGuardando(false);
+        }
     };
 
     return (
-        <form onSubmit={handleSubmit} style={styles.form}>
-            <h3>{clienteInicial?.id ? 'Editar Cliente' : 'Nuevo Cliente'}</h3>
+        <form onSubmit={guardar} style={{ maxWidth: 480 }}>
+            <h3>
+                {editando ? 'Editar cliente' : 'Nuevo cliente'}
+            </h3>
 
-            <div style={styles.campo}>
-                <label htmlFor="nombre">Nombre completo *</label>
-                <input
-                    type="text"
-                    id="nombre"
-                    name="nombre"
-                    value={formData.nombre}
-                    onChange={handleChange}
-                />
-                {errores.nombre && <span style={styles.error}>{errores.nombre}</span>}
-            </div>
+            {campos.map((campo) => (
+                <div
+                    key={campo.id}
+                    style={{ marginBottom: 12 }}
+                >
+                    <label htmlFor={`cliente-${campo.id}`}>
+                        {campo.nombre}
+                        {campo.requerido ? ' *' : ''}
+                    </label>
 
-            <div style={styles.campo}>
-                <label htmlFor="correo">Correo Electrónico *</label>
-                <input
-                    type="email"
-                    id="correo"
-                    name="correo"
-                    value={formData.correo}
-                    onChange={handleChange}
-                />
-                {errores.correo && <span style={styles.error}>{errores.correo}</span>}
-            </div>
+                    <input
+                        id={`cliente-${campo.id}`}
+                        type={campo.tipo || 'text'}
+                        required={Boolean(campo.requerido)}
+                        disabled={
+                            guardando ||
+                            (editando && campo.id === 'id')
+                        }
+                        value={datos[campo.id]}
+                        onChange={(e) => {
+                            setDatos((prev) => ({
+                                ...prev,
+                                [campo.id]: e.target.value
+                            }));
 
-            <div style={styles.campo}>
-                <label htmlFor="telefono">Teléfono</label>
-                <input
-                    type="text"
-                    id="telefono"
-                    name="telefono"
-                    value={formData.telefono}
-                    onChange={handleChange}
-                />
-                {errores.telefono && <span style={styles.error}>{errores.telefono}</span>}
-            </div>
+                            setErrores((prev) => ({
+                                ...prev,
+                                [campo.id]: undefined
+                            }));
+                        }}
+                        style={{
+                            display: 'block',
+                            width: '100%',
+                            padding: 8
+                        }}
+                    />
 
-            <div style={styles.botones}>
-                <button type="submit" style={styles.btnGuardar}>Guardar</button>
-                {onCancelar && (
-                    <button type="button" onClick={onCancelar} style={styles.btnCancelar}>
-                        Cancelar
-                    </button>
-                )}
-            </div>
+                    {errores[campo.id] && (
+                        <small style={{ color: '#b00020' }}>
+                            {errores[campo.id]}
+                        </small>
+                    )}
+                </div>
+            ))}
+
+            <button
+                type="submit"
+                disabled={guardando}
+            >
+                {guardando ? 'Guardando...' : 'Guardar cliente'}
+            </button>
+
+            <button
+                type="button"
+                onClick={onCancelar}
+                disabled={guardando}
+            >
+                Cancelar
+            </button>
         </form>
     );
-};
-
-const styles = {
-    form: { display: 'flex', flexDirection: 'column', gap: '15px', maxWidth: '400px' },
-    campo: { display: 'flex', flexDirection: 'column', gap: '5px' },
-    error: { color: 'red', fontSize: '0.85rem' },
-    botones: { display: 'flex', gap: '10px' },
-    btnGuardar: { padding: '8px 16px', backgroundColor: '#28a745', color: '#fff', border: 'none', borderRadius: '4px' },
-    btnCancelar: { padding: '8px 16px', backgroundColor: '#6c757d', color: '#fff', border: 'none', borderRadius: '4px' }
-};
-
-export default FormularioCliente;
+}

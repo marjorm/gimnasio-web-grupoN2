@@ -1,69 +1,140 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
+import { esEmailValido, esRequerido } from '../../validaciones';
 
-const FormularioInscripcion = ({ cursos = [], rutinas = [], onSubmit }) => {
-    const [formData, setFormData] = useState({
+export default function FormularioInscripcion({
+    cursos = [],
+    rutinas = [],
+    onSubmit
+}) {
+    const [datos, setDatos] = useState({
         nombreCliente: '',
         correoCliente: '',
         tipoInscripcion: 'curso',
         itemId: ''
     });
-    const [mensajeError, setMensajeError] = useState('');
 
-    const handleChange = (e) => {
-        setFormData({ ...formData, [e.target.name]: e.target.value });
+    const [error, setError] = useState('');
+
+    const opciones = datos.tipoInscripcion === 'curso'
+        ? cursos
+        : rutinas;
+
+    const cambiar = (evento) => {
+        const { name, value } = evento.target;
+
+        setDatos((anterior) => ({
+            ...anterior,
+            [name]: value,
+            ...(name === 'tipoInscripcion' ? { itemId: '' } : {})
+        }));
+
+        setError('');
     };
 
-    const handleSubmit = (e) => {
-        e.preventDefault();
-        if (!formData.nombreCliente || !formData.correoCliente || !formData.itemId) {
-            setMensajeError('Por favor complete todos los campos obligatorios.');
+    const verificar = (evento) => {
+        evento.preventDefault();
+
+        if (
+            !esRequerido(datos.nombreCliente) ||
+            !esEmailValido(datos.correoCliente) ||
+            !esRequerido(datos.itemId)
+        ) {
+            setError('Complete el nombre, correo válido y opción.');
             return;
         }
-        setMensajeError('');
-        onSubmit(formData);
+
+        const seleccionValida = opciones.some(
+            (item) => String(item.id) === String(datos.itemId)
+        );
+
+        if (!seleccionValida) {
+            setError('Seleccione una opción válida de la lista.');
+            return;
+        }
+
+        setError('');
+        onSubmit(datos);
     };
 
-    const listaOpciones = formData.tipoInscripcion === 'curso' ? cursos : rutinas;
-
     return (
-        <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '12px', maxWidth: '400px' }}>
-            {mensajeError && <div style={{ color: 'red' }}>{mensajeError}</div>}
+        <form
+            onSubmit={verificar}
+            style={{
+                display: 'flex',
+                flexDirection: 'column',
+                gap: 12,
+                maxWidth: 420
+            }}
+        >
+            {error && (
+                <p role="alert" style={{ color: '#b00020' }}>
+                    {error}
+                </p>
+            )}
 
-            <div>
-                <label htmlFor="nombreCliente">Nombre Completo *</label>
-                <input id="nombreCliente" name="nombreCliente" value={formData.nombreCliente} onChange={handleChange} style={{ width: '100%' }} />
-            </div>
+            <label htmlFor="inscripcion-nombre">
+                Nombre completo *
+            </label>
+            <input
+                id="inscripcion-nombre"
+                name="nombreCliente"
+                required
+                value={datos.nombreCliente}
+                onChange={cambiar}
+            />
 
-            <div>
-                <label htmlFor="correoCliente">Correo Electrónico *</label>
-                <input id="correoCliente" name="correoCliente" type="email" value={formData.correoCliente} onChange={handleChange} style={{ width: '100%' }} />
-            </div>
+            <label htmlFor="inscripcion-correo">
+                Correo electrónico *
+            </label>
+            <input
+                id="inscripcion-correo"
+                name="correoCliente"
+                type="email"
+                required
+                value={datos.correoCliente}
+                onChange={cambiar}
+            />
 
-            <div>
-                <label htmlFor="tipoInscripcion">Tipo de Inscripción</label>
-                <select id="tipoInscripcion" name="tipoInscripcion" value={formData.tipoInscripcion} onChange={handleChange} style={{ width: '100%' }}>
-                    <option value="curso">Curso</option>
-                    <option value="rutina">Rutina</option>
-                </select>
-            </div>
+            <label htmlFor="inscripcion-tipo">
+                Tipo de inscripción
+            </label>
+            <select
+                id="inscripcion-tipo"
+                name="tipoInscripcion"
+                value={datos.tipoInscripcion}
+                onChange={cambiar}
+            >
+                <option value="curso">Curso</option>
+                <option value="rutina">Rutina</option>
+            </select>
 
-            <div>
-                <label htmlFor="itemId">Seleccionar {formData.tipoInscripcion === 'curso' ? 'Curso' : 'Rutina'} *</label>
-                <select id="itemId" name="itemId" value={formData.itemId} onChange={handleChange} style={{ width: '100%' }}>
-                    <option value="">-- Seleccionar --</option>
-                    {listaOpciones.map((item) => (
-                        <option key={item.id} value={item.id}>
-                            {item.nombre || item.titulo || `Opción ${item.id}`}
-                        </option>
-                    ))}
-                </select>
-            </div>
+            <label htmlFor="inscripcion-opcion">
+                Seleccionar opción *
+            </label>
+            <select
+                id="inscripcion-opcion"
+                name="itemId"
+                required
+                value={datos.itemId}
+                onChange={cambiar}
+            >
+                <option value="">Seleccione...</option>
+                {opciones.map((item) => (
+                    <option key={item.id} value={item.id}>
+                        {datos.tipoInscripcion === 'curso'
+                            ? item.descripcion || `Curso ${item.id}`
+                            : `Rutina ${item.id}`}
+                    </option>
+                ))}
+            </select>
 
-            <button type="submit" style={{ padding: '10px', backgroundColor: '#28a745', color: 'white', border: 'none', borderRadius: '4px' }}>
-                Inscribirme
+            <button type="submit">
+                Verificar datos
             </button>
+
+            <small>
+                Esta verificación no guarda ni envía una inscripción.
+            </small>
         </form>
     );
-};
-
-export default FormularioInscripcion;
+}

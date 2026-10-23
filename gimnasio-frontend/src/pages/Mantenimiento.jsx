@@ -1,146 +1,191 @@
-import React, { useState, useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import FormularioCliente from '../components/forms/FormularioCliente';
 import ModalConfirmacion from '../components/ui/ModalConfirmacion';
-import {
-    obtenerClientes,
-    crearCliente,
-    actualizarCliente,
-    eliminarCliente
-} from '../services/clienteService';
+import { clienteService } from '../services/clienteService';
 
-const Mantenimiento = () => {
+export default function Mantenimiento() {
     const [clientes, setClientes] = useState([]);
     const [cargando, setCargando] = useState(true);
-    const [error, setError] = useState(null);
-
+    const [error, setError] = useState('');
     const [clienteEditar, setClienteEditar] = useState(null);
     const [mostrarFormulario, setMostrarFormulario] = useState(false);
-    const [clienteAEliminar, setClienteAEliminar] = useState(null);
-
-    const cargarClientes = async () => {
-        try {
-            setCargando(true);
-            setError(null);
-            if (obtenerClientes) {
-                const data = await obtenerClientes();
-                setClientes(data || []);
-            }
-        } catch (err) {
-            setError('No se pudieron cargar los datos de los clientes.');
-        } finally {
-            setCargando(false);
-        }
-    };
+    const [clienteEliminar, setClienteEliminar] = useState(null);
 
     useEffect(() => {
-        cargarClientes();
+        let activo = true;
+
+        clienteService.obtenerTodos()
+            .then((datos) => {
+                if (activo) {
+                    setClientes(Array.isArray(datos) ? datos : []);
+                }
+            })
+            .catch(() => {
+                if (activo) {
+                    setError('No se pudieron cargar los clientes.');
+                }
+            })
+            .finally(() => {
+                if (activo) {
+                    setCargando(false);
+                }
+            });
+
+        return () => {
+            activo = false;
+        };
     }, []);
 
-    const handleGuardar = async (formData) => {
+    const recargar = async () => {
+        const datos = await clienteService.obtenerTodos();
+
+        setClientes(Array.isArray(datos) ? datos : []);
+    };
+
+    const guardar = async (datos) => {
         try {
-            if (clienteEditar && clienteEditar.id) {
-                await actualizarCliente(clienteEditar.id, formData);
+            setError('');
+
+            if (clienteEditar) {
+                await clienteService.actualizarCliente(
+                    clienteEditar.id,
+                    datos
+                );
             } else {
-                await crearCliente(formData);
+                await clienteService.guardarCliente(datos);
             }
+
             setMostrarFormulario(false);
             setClienteEditar(null);
-            await cargarClientes();
-        } catch (err) {
-            setError('Ocurrió un error al guardar los datos del cliente.');
+            await recargar();
+
+        } catch {
+            setError(
+                'No se pudo completar la operación. Verifique los datos y el servidor.'
+            );
         }
     };
 
-    const handleConfirmarEliminar = async () => {
-        if (!clienteAEliminar) return;
+    const eliminar = async () => {
+        if (!clienteEliminar) {
+            return;
+        }
+
         try {
-            await eliminarCliente(clienteAEliminar.id);
-            setClienteAEliminar(null);
-            await cargarClientes();
-        } catch (err) {
-            setError('Ocurrió un error al intentar eliminar el cliente.');
-            setClienteAEliminar(null);
+            setError('');
+
+            await clienteService.eliminarCliente(clienteEliminar.id);
+            await recargar();
+
+        } catch {
+            setError('No se pudo eliminar el cliente.');
+
+        } finally {
+            setClienteEliminar(null);
         }
     };
 
     return (
-        <div style={{ padding: '20px' }}>
-            <h2>Mantenimiento de Clientes</h2>
+        <section style={{ padding: 20 }}>
+            <h2>Mantenimiento de clientes</h2>
 
-            {error && <div style={{ color: 'red', marginBottom: '10px' }}>{error}</div>}
+            {error && (
+                <p role="alert" style={{ color: '#b00020' }}>
+                    {error}
+                </p>
+            )}
 
-            {!mostrarFormulario ? (
+            {mostrarFormulario ? (
+                <FormularioCliente
+                    key={clienteEditar?.id ?? 'nuevo'}
+                    clienteInicial={clienteEditar}
+                    onSubmit={guardar}
+                    onCancelar={() => {
+                        setMostrarFormulario(false);
+                        setClienteEditar(null);
+                    }}
+                />
+            ) : (
                 <>
                     <button
-                        onClick={() => { setClienteEditar(null); setMostrarFormulario(true); }}
-                        style={{ marginBottom: '15px', padding: '8px 16px', backgroundColor: '#007bff', color: '#fff', border: 'none', borderRadius: '4px' }}
+                        type="button"
+                        onClick={() => {
+                            setClienteEditar(null);
+                            setMostrarFormulario(true);
+                        }}
                     >
-                        + Nuevo Cliente
+                        Nuevo cliente
                     </button>
 
                     {cargando ? (
                         <p>Cargando clientes...</p>
                     ) : (
-                        <table style={{ width: '100%', borderCollapse: 'collapse', textAlign: 'left' }}>
+                        <table
+                            style={{
+                                width: '100%',
+                                marginTop: 16
+                            }}
+                        >
                             <thead>
-                            <tr style={{ backgroundColor: '#f2f2f2' }}>
-                                <th style={{ padding: '8px', border: '1px solid #ddd' }}>ID</th>
-                                <th style={{ padding: '8px', border: '1px solid #ddd' }}>Nombre</th>
-                                <th style={{ padding: '8px', border: '1px solid #ddd' }}>Correo</th>
-                                <th style={{ padding: '8px', border: '1px solid #ddd' }}>Acciones</th>
-                            </tr>
-                            </thead>
-                            <tbody>
-                            {clientes.length === 0 ? (
                                 <tr>
-                                    <td colSpan="4" style={{ textAlign: 'center', padding: '10px' }}>
-                                        No hay clientes registrados.
-                                    </td>
+                                    <th>Cédula</th>
+                                    <th>Nombre</th>
+                                    <th>Correo</th>
+                                    <th>Acciones</th>
                                 </tr>
-                            ) : (
-                                clientes.map((c) => (
+                            </thead>
+
+                            <tbody>
+                                {clientes.map((c) => (
                                     <tr key={c.id}>
-                                        <td style={{ padding: '8px', border: '1px solid #ddd' }}>{c.id}</td>
-                                        <td style={{ padding: '8px', border: '1px solid #ddd' }}>{c.nombre}</td>
-                                        <td style={{ padding: '8px', border: '1px solid #ddd' }}>{c.correo}</td>
-                                        <td style={{ padding: '8px', border: '1px solid #ddd' }}>
+                                        <td>{c.id}</td>
+                                        <td>
+                                            {c.nombre} {c.apellido1} {c.apellido2}
+                                        </td>
+                                        <td>{c.eMail ?? c.email ?? ''}</td>
+                                        <td>
                                             <button
-                                                onClick={() => { setClienteEditar(c); setMostrarFormulario(true); }}
-                                                style={{ marginRight: '8px', backgroundColor: '#ffc107', border: 'none', padding: '4px 8px', borderRadius: '4px' }}
+                                                type="button"
+                                                onClick={() => {
+                                                    setClienteEditar(c);
+                                                    setMostrarFormulario(true);
+                                                }}
                                             >
                                                 Editar
                                             </button>
+
                                             <button
-                                                onClick={() => setClienteAEliminar(c)}
-                                                style={{ backgroundColor: '#dc3545', color: '#fff', border: 'none', padding: '4px 8px', borderRadius: '4px' }}
+                                                type="button"
+                                                onClick={() => {
+                                                    setClienteEliminar(c);
+                                                }}
                                             >
                                                 Eliminar
                                             </button>
                                         </td>
                                     </tr>
-                                ))
-                            )}
+                                ))}
+
+                                {clientes.length === 0 && !error && (
+                                    <tr>
+                                        <td colSpan="4">
+                                            No hay clientes registrados.
+                                        </td>
+                                    </tr>
+                                )}
                             </tbody>
                         </table>
                     )}
                 </>
-            ) : (
-                <FormularioCliente
-                    clienteInicial={clienteEditar}
-                    onSubmit={handleGuardar}
-                    onCancelar={() => { setMostrarFormulario(false); setClienteEditar(null); }}
-                />
             )}
 
             <ModalConfirmacion
-                isOpen={Boolean(clienteAEliminar)}
-                titulo="Eliminar Cliente"
-                mensaje={`¿Está seguro de que desea eliminar a ${clienteAEliminar?.nombre}?`}
-                onConfirm={handleConfirmarEliminar}
-                onCancel={() => setClienteAEliminar(null)}
+                isOpen={Boolean(clienteEliminar)}
+                titulo="Eliminar cliente"
+                mensaje={`¿Eliminar a ${clienteEliminar?.nombre ?? ''}?`}
+                onConfirm={eliminar}
+                onCancel={() => setClienteEliminar(null)}
             />
-        </div>
+        </section>
     );
-};
-
-export default Mantenimiento;
+}
