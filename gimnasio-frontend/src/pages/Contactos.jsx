@@ -1,4 +1,6 @@
 
+import FormularioContacto from "../components/forms/FormularioContacto.jsx";
+
 function Contactos() {
     return (
         <section className="pagina-contactos">
@@ -35,8 +37,11 @@ function Contactos() {
             <h3>Formulario de contacto</h3>
 
             <p>
-                Esta sección permitirá enviar consultas al gimnasio.
+                Puedes verificar los datos del mensaje en este formulario.
+                Todavía no se envían mensajes al servidor.
             </p>
+
+            <FormularioContacto />
         </section>
     );
 }
