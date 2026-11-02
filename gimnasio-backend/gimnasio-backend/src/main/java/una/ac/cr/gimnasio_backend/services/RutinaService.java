@@ -34,6 +34,10 @@ public class RutinaService {
         return salida;
     }
 
+    @Transactional(readOnly = true) public List<Rutina> ObteberRutinasPorClienteId(Integer id){
+        return rutinas.findRutinasByCliente_Id(id);
+    }
+
     @Transactional(readOnly = true) public Rutina obtener(Integer id) {
         return rutinas.findById(id).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Rutina no encontrada"));
     }

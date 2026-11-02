@@ -1,4 +1,5 @@
 package una.ac.cr.gimnasio_backend.controllers;
+import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
 
 import org.springframework.http.HttpStatus;

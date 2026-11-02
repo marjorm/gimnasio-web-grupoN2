@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import FormularioCliente from '../components/forms/FormularioCliente';
 import ModalConfirmacion from '../components/ui/ModalConfirmacion';
 import { clienteService } from '../services/clienteService';
+import { usuarioService } from '../services/usuarioService'; 
 
 export default function Mantenimiento() {
     const [clientes, setClientes] = useState([]);
@@ -20,9 +21,11 @@ export default function Mantenimiento() {
                     setClientes(Array.isArray(datos) ? datos : []);
                 }
             })
-            .catch(() => {
+            .catch((err) => {
                 if (activo) {
-                    setError('No se pudieron cargar los clientes.');
+                    setError(
+                        err.message || 'No se pudieron cargar los clientes'
+                    );
                 }
             })
             .finally(() => {
@@ -47,11 +50,21 @@ export default function Mantenimiento() {
             setError('');
 
             if (clienteEditar) {
+                // Si estamos editando, solo actualizamos el cliente
                 await clienteService.actualizarCliente(
                     clienteEditar.id,
                     datos
                 );
             } else {
+                // 2. Si es nuevo, primero creamos la cuenta de usuario ligada a su cédula (id)
+                await usuarioService.registrar({
+                    id: datos.id,
+                    username: datos.username,
+                    passwordHash: datos.passwordHash,
+                    rol: datos.rol || 'CLIENTE'
+                });
+
+                // 3. Luego creamos el perfil del cliente
                 await clienteService.guardarCliente(datos);
             }
 
@@ -59,9 +72,9 @@ export default function Mantenimiento() {
             setClienteEditar(null);
             await recargar();
 
-        } catch {
+        } catch (err) {
             setError(
-                'No se pudo completar la operación. Verifique los datos y el servidor.'
+                err.message || 'No se pudo completar la operación. Verifique los datos y el servidor.'
             );
         }
     };
@@ -77,8 +90,8 @@ export default function Mantenimiento() {
             await clienteService.eliminarCliente(clienteEliminar.id);
             await recargar();
 
-        } catch {
-            setError('No se pudo eliminar el cliente.');
+        } catch (err) {
+            setError(err.message || 'No se pudo eliminar el cliente.');
 
         } finally {
             setClienteEliminar(null);

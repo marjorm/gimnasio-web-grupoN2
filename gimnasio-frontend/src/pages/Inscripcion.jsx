@@ -10,7 +10,7 @@ export default function Inscripcion() {
     const [error, setError] = useState('');
     const [mensaje, setMensaje] = useState('');
 
-    useEffect(() => {
+useEffect(() => {
         let activo = true;
 
         Promise.all([
@@ -23,10 +23,10 @@ export default function Inscripcion() {
                 setCursos(Array.isArray(listaCursos) ? listaCursos : []);
                 setRutinas(Array.isArray(listaRutinas) ? listaRutinas : []);
             })
-            .catch(() => {
+            .catch((err) => {
                 if (activo) {
                     setError(
-                        'No se pudieron cargar cursos y rutinas. Verifique el servidor.'
+                        err.message || 'No se pudieron cargar cursos y rutinas. Verifique el servidor.'
                     );
                 }
             })

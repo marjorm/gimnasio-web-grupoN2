@@ -3,6 +3,11 @@ import { apiCall } from './api';
 const ENDPOINT = '/rutinas';
 
 export const rutinaService = {
+
+    obtenerMisRutinas: async () => {
+        return await apiCall(`${ENDPOINT}/mis-rutinas`);
+    },
+    
     //listar todas las rutinas (GET /api/rutinas)
     obtenerTodas: async () => {
         return await apiCall(ENDPOINT);

@@ -1,8 +1,10 @@
 package una.ac.cr.gimnasio_backend.services;
 
 
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.server.ResponseStatusException;
 import una.ac.cr.gimnasio_backend.models.Cliente;
 import una.ac.cr.gimnasio_backend.repositories.ClienteRepository;
 import una.ac.cr.gimnasio_backend.exceptions.ClienteNotFoundException;
@@ -33,8 +35,17 @@ public class ClienteService {
                 .orElseThrow(() -> new ClienteNotFoundException(
                         "Cliente no encontrado con la cédula: " + cedula));
     }
+
     @Transactional
     public Cliente guardarCliente(Cliente cliente) {
+        // Validamos si ya existe un cliente con esta misma cédula (id)
+        if (cliente.getId() != null && clienteRepository.existsById(cliente.getId())) {
+            throw new ResponseStatusException(
+                    HttpStatus.BAD_REQUEST,
+                    "Ya existe un cliente registrado con esta cédula."
+            );
+        }
+        // Si no existe, procede a guardarlo de forma segura
         return clienteRepository.save(cliente);
     }
 
