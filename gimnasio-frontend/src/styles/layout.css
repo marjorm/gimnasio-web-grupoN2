@@ -53,6 +53,23 @@ nav a:hover {
     background-color: #1976d2;
 }
 
+nav button.btn-logout {
+    color: white;
+    text-decoration: none;
+    padding: 10px 18px;
+    border-radius: 6px;
+    background-color: #d32f2f; /* Un tono rojo diferenciado para el logout */
+    border: none;
+    font-size: inherit;
+    font-family: inherit;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+nav button.btn-logout:hover {
+    background-color: #b71c1c;
+}
+
 /* CONTENIDO PRINCIPAL */
 
 main {

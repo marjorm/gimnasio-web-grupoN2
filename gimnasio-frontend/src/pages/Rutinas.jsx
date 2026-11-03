@@ -1,69 +1,36 @@
 import { useState, useEffect } from 'react';
 import { rutinaService } from '../services/rutinaService';
-import { clienteService } from '../services/clienteService';
 import MensajeEstado from '../components/ui/MensajeEstado';
 
 export default function Rutinas() {
     const [rutinas, setRutinas] = useState([]);
-    const [clientes, setClientes] = useState([]);
-    const [clienteSeleccionado, setClienteSeleccionado] = useState('');
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
 
-    // Cargar clientes y rutinas al iniciar
     useEffect(() => {
-        const cargarDatosIniciales = async () => {
+        const cargarMisRutinas = async () => {
             try {
                 setLoading(true);
-                const [dataRutinas, dataClientes] = await Promise.all([
-                    rutinaService.obtenerTodas(),
-                    clienteService.obtenerTodos()
-                ]);
+                const dataRutinas = await rutinaService.obtenerMisRutinas();
                 setRutinas(dataRutinas);
-                setClientes(dataClientes);
                 setError(null);
-            } catch {
-                setError('No se pudieron cargar las rutinas desde el servidor.');
+            } catch (err) {
+                setError('No se pudieron cargar sus rutinas desde el servidor.');
             } finally {
                 setLoading(false);
             }
         };
 
-        cargarDatosIniciales();
+        cargarMisRutinas();
     }, []);
-
-    // Filtrar rutinas según el cliente seleccionado (Simulando el acceso por usuario)
-    const rutinasFiltradas = clienteSeleccionado 
-        ? rutinas.filter(r => r.cliente?.id === Number(clienteSeleccionado) || r.clienteId === Number(clienteSeleccionado))
-        : rutinas;
 
     return (
         <div>
             <section>
-                <h2>Consulta de rutinas personalizadas</h2>
+                <h2>Mis rutinas personalizadas</h2>
                 <p className="intro-seccion">
-                    <em>Nota de desarrollo:</em> Selecciona un cliente para simular su vista de rutinas asignadas.
+                    Aquí puedes consultar el detalle de las rutinas que te han sido asignadas en el gimnasio.
                 </p>
-
-                {/* Selector temporal para simular el inicio de sesión del cliente */}
-                <div style={{ marginBottom: '20px', padding: '15px', background: '#f4f6f9', borderRadius: '8px' }}>
-                    <label htmlFor="select-cliente" style={{ fontWeight: 'bold', marginRight: '10px' }}>
-                        Simular cliente (Cédula):
-                    </label>
-                    <select 
-                        id="select-cliente"
-                        value={clienteSeleccionado} 
-                        onChange={(e) => setClienteSeleccionado(e.target.value)}
-                        style={{ padding: '8px', borderRadius: '4px', border: '1px solid #ccc' }}
-                    >
-                        <option value="">-- Ver todas las rutinas --</option>
-                        {clientes.map(c => (
-                            <option key={c.id} value={c.id}>
-                                {c.id} - {c.nombre} {c.apellido}
-                            </option>
-                        ))}
-                    </select>
-                </div>
             </section>
 
             <section aria-labelledby="rutinas-asignadas">
@@ -72,17 +39,16 @@ export default function Rutinas() {
                 <MensajeEstado 
                     loading={loading} 
                     error={error} 
-                    mensajeVacio="No hay rutinas registradas para este cliente." 
-                    datosCount={rutinasFiltradas.length} 
+                    mensajeVacio="No tienes rutinas registradas en este momento." 
+                    datosCount={rutinas.length} 
                 />
 
-                {!loading && !error && rutinasFiltradas.length > 0 && (
+                {!loading && !error && rutinas.length > 0 && (
                     <div className="tabla-responsive">
                         <table>
                             <thead>
                                 <tr>
                                     <th>ID</th>
-                                    <th>Cliente</th>
                                     <th>Instructor</th>
                                     <th>Máquina ID</th>
                                     <th>Fecha</th>
@@ -90,12 +56,9 @@ export default function Rutinas() {
                                 </tr>
                             </thead>
                             <tbody>
-                                {rutinasFiltradas.map((r) => (
+                                {rutinas.map((r) => (
                                     <tr key={r.id}>
                                         <td>{r.id}</td>
-                                        <td>
-                                            {r.cliente?.nombre} {r.cliente?.apellido1} ({r.cliente?.id})
-                                        </td>
                                         <td>
                                             {r.instructor?.nombre} {r.instructor?.apellido1}
                                         </td>
@@ -111,8 +74,8 @@ export default function Rutinas() {
             </section>
 
             <aside className="nota-informativa" style={{ marginTop: '30px' }}>
-                <h2>Rutinas personalizadas</h2>
-                <p>Las rutinas se asignan de acuerdo con los objetivos y necesidades específicas de cada cliente inscrito.</p>
+                <h2>Recomendaciones</h2>
+                <p>Las rutinas se asignan de acuerdo con tus objetivos personales. Sigue las instrucciones de tu instructor y mantén una buena hidratación.</p>
             </aside>
         </div>
     );

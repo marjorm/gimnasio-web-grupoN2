@@ -51,7 +51,8 @@ export default function Instructores() {
                         <Tarjeta key={instructor.id} titulo={instructor.nombre}>
                             {/* Imagen estática de respaldo asignada por índice para conservar el diseño visual */}
                             <img 
-                               src={imagenesInstructores[index % imagenesInstructores.length]}
+                               //src={imagenesInstructores[index % imagenesInstructores.length]}
+                               src ={'/img/instructor1.svg'}
                                 alt={`Ilustración de ${instructor.nombre}`} 
                                 style={{ width: 'auto', height: '140px', objectFit: 'cover', borderRadius: '4px', marginBottom: '10px' }}
                             />

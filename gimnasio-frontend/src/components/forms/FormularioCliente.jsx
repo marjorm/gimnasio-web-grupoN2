@@ -14,6 +14,9 @@ export default function FormularioCliente({
 
     const [datos, setDatos] = useState(() => ({
         id: String(clienteInicial?.id ?? ''),
+        username: String(clienteInicial?.username ?? ''),       //  Campo de usuario
+        passwordHash: String(clienteInicial?.passwordHash ?? ''), //  Campo de contraseña
+        rol: 'CLIENTE',                                           //  Rol por defecto
         nombre: clienteInicial?.nombre ?? '',
         apellido1: clienteInicial?.apellido1 ?? '',
         apellido2: clienteInicial?.apellido2 ?? '',
@@ -29,6 +32,9 @@ export default function FormularioCliente({
 
     const campos = [
         { id: 'id', nombre: 'Cédula', requerido: true },
+        // Solo requerimos username y password si es un nuevo registro
+        { id: 'username', nombre: 'Nombre de usuario (Login)', requerido: !editando },
+        { id: 'passwordHash', nombre: 'Contraseña', tipo: 'password', requerido: !editando },
         { id: 'nombre', nombre: 'Nombre', requerido: true },
         { id: 'apellido1', nombre: 'Primer apellido', requerido: true },
         { id: 'apellido2', nombre: 'Segundo apellido', requerido: true },
@@ -61,6 +67,9 @@ export default function FormularioCliente({
         const payload = {
             ...datos,
             id: Number(datos.id),
+            username: datos.username ? datos.username.trim() : '',
+            passwordHash: datos.passwordHash ? datos.passwordHash : '',
+            rol: 'CLIENTE',
             nombre: datos.nombre.trim(),
             apellido1: datos.apellido1.trim(),
             apellido2: datos.apellido2.trim(),
@@ -100,7 +109,7 @@ export default function FormularioCliente({
                         required={Boolean(campo.requerido)}
                         disabled={
                             guardando ||
-                            (editando && campo.id === 'id')
+                            (editando && (campo.id === 'id' || campo.id === 'username')) // Bloquear id y username si estamos editando
                         }
                         value={datos[campo.id]}
                         onChange={(e) => {
