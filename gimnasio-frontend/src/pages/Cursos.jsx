@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { cursoService } from '../services/cursoService';
 import MensajeEstado from '../components/ui/MensajeEstado';
 import ListaDatos from '../components/ui/ListaDatos';
@@ -8,15 +9,17 @@ export default function Cursos() {
     const [cursos, setCursos] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
+    const navigate = useNavigate();
 
     useEffect(() => {
         const cargarCursos = async () => {
             try {
                 setLoading(true);
                 const data = await cursoService.obtenerTodos();
-                setCursos(data);
+                setCursos(Array.isArray(data) ? data : []);
                 setError(null);
-            } catch {
+            } catch (err) {
+                console.error('Error al cargar cursos:', err);
                 setError('No se pudieron cargar los cursos desde el servidor. Comprueba la conexión.');
             } finally {
                 setLoading(false);
@@ -26,30 +29,54 @@ export default function Cursos() {
         cargarCursos();
     }, []);
 
+    const irAInscripcion = (cursoId) => {
+        navigate('/inscripcion', { state: { cursoSeleccionado: cursoId } });
+    };
+
     return (
         <div>
             <section>
                 <h2>Cursos disponibles</h2>
                 <p className="intro-seccion">Consulta nuestra oferta de cursos actualizados desde el sistema.</p>
 
-                <MensajeEstado 
-                    loading={loading} 
-                    error={error} 
-                    mensajeVacio="No hay cursos registrados en este momento." 
-                    datosCount={cursos.length} 
+                <MensajeEstado
+                    loading={loading}
+                    error={error}
+                    mensajeVacio="No hay cursos registrados en este momento."
+                    datosCount={cursos.length}
                 />
 
-                {/* Contenedor con la clase CSS original de la plantilla para la cuadrícula */}
+                {}
                 <div className="cursos-grid">
-                    <ListaDatos 
-                        items={cursos} 
-                        renderItem={(curso) => (
-                            <div className="curso-card">
-                                <Tarjeta titulo={`Curso ID: ${curso.id}`}>
-                                    <p><strong>Descripción:</strong> {curso.descripcion}</p>
-                                </Tarjeta>
-                            </div>
-                        )}
+                    <ListaDatos
+                        items={cursos}
+                        renderItem={(curso) => {
+                            const idVal = curso.id || curso.idCurso;
+                            const tituloCurso = curso.nombre || `Curso ID: ${idVal}`;
+
+                            return (
+                                <div className="curso-card" key={idVal}>
+                                    <Tarjeta titulo={tituloCurso}>
+                                        <p><strong>Descripción:</strong> {curso.descripcion || 'Sin descripción.'}</p>
+                                        {curso.horario && <p><strong>Horario:</strong> {curso.horario}</p>}
+                                        {curso.cupo !== undefined && <p><strong>Cupos disponibles:</strong> {curso.cupo}</p>}
+                                        {curso.precio !== undefined && <p><strong>Precio:</strong> ₡{curso.precio}</p>}
+
+                                        <button
+                                            type="button"
+                                            onClick={() => irAInscripcion(idVal)}
+                                            style={{
+                                                marginTop: 10,
+                                                padding: '6px 12px',
+                                                cursor: 'pointer'
+                                            }}
+                                        >
+                                            Inscribirme a este curso
+                                        </button>
+                                    </Tarjeta>
+                                </div>
+                            );
+                        }}
                     />
                 </div>
             </section>

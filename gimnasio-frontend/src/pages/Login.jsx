@@ -1,15 +1,13 @@
 import { useState } from 'react';
-import { Link, useNavigate } from "react-router-dom";
-import { useAuth } from "../context/auth.js";
-import EstadoSesion from "../components/ui/EstadoSesion.jsx";
+import { Link, useNavigate } from 'react-router-dom';
+import { useAuth } from '../context/AuthContext.jsx';
 
 export default function Login() {
-    const { autenticado, verificando, login } = useAuth();
+    const { login } = useAuth();
     const navigate = useNavigate();
 
-    // Estados locales para el formulario
-    const [username, setUsername] = useState('');
-    const [password, setPassword] = useState('');
+    const [usuarioInput, setUsuarioInput] = useState('');
+    const [passwordInput, setPasswordInput] = useState('');
     const [error, setError] = useState('');
     const [cargando, setCargando] = useState(false);
 
@@ -18,15 +16,27 @@ export default function Login() {
         setError('');
         setCargando(true);
 
-        const resultado = await login(username, password);
-        setCargando(false);
+        try {
+            // Llama a la función login del AuthContext que actualiza el estado global
+            const res = await login(usuarioInput, passwordInput);
 
-        if (resultado.success) {
-            // Redirigir según el rol del usuario que vino de la BD
-            // (Puedes personalizar estas rutas según tu estructura)
-            navigate('/'); 
-        } else {
-            setError('Usuario o contraseña incorrectos.');
+            if (res && res.success) {
+                const usuarioSesion = JSON.parse(localStorage.getItem('usuario') || '{}');
+                const rol = (usuarioSesion.rol || 'ADMIN').toUpperCase();
+
+                if (rol === 'ADMIN' || rol === 'ADMINISTRADOR') {
+                    navigate('/mantenimiento', { replace: true });
+                } else {
+                    navigate('/', { replace: true });
+                }
+            } else {
+                setError(res?.message || 'Usuario o contraseña incorrectos.');
+            }
+        } catch (err) {
+            console.error('Error durante el inicio de sesión:', err);
+            setError('Ocurrió un error inesperado al procesar la solicitud.');
+        } finally {
+            setCargando(false);
         }
     };
 
@@ -34,48 +44,36 @@ export default function Login() {
         <div>
             <section aria-labelledby="titulo-login">
                 <h2 id="titulo-login">Acceso al gimnasio</h2>
-                <EstadoSesion />
 
-                {verificando ? (
-                    <p role="status">Verificando su sesión...</p>
-                ) : autenticado ? (
-                    <p role="status">Su sesión ya se encuentra activa.</p>
-                ) : (
-                    <>
-                        <p>El acceso a las funciones privadas requiere iniciar sesión.</p>
+                {error && <p style={{ color: '#b00020', fontWeight: 'bold' }} role="alert">{error}</p>}
 
-                        {error && <p style={{ color: 'red' }} role="alert">{error}</p>}
+                <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '10px', maxWidth: '300px', margin: '20px 0' }}>
+                    <div>
+                        <label htmlFor="username">Usuario: </label>
+                        <input
+                            id="username"
+                            type="text"
+                            value={usuarioInput}
+                            onChange={(e) => setUsuarioInput(e.target.value)}
+                            required
+                        />
+                    </div>
 
-                        {/* Formulario de Acceso */}
-                        <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '10px', maxWidth: '300px', margin: '20px 0' }}>
-                            <div>
-                                <label htmlFor="username">Usuario: </label>
-                                <input 
-                                    id="username"
-                                    type="text" 
-                                    value={username} 
-                                    onChange={(e) => setUsername(e.target.value)} 
-                                    required 
-                                />
-                            </div>
+                    <div>
+                        <label htmlFor="password">Contraseña: </label>
+                        <input
+                            id="password"
+                            type="password"
+                            value={passwordInput}
+                            onChange={(e) => setPasswordInput(e.target.value)}
+                            required
+                        />
+                    </div>
 
-                            <div>
-                                <label htmlFor="password">Contraseña: </label>
-                                <input 
-                                    id="password"
-                                    type="password" 
-                                    value={password} 
-                                    onChange={(e) => setPassword(e.target.value)} 
-                                    required 
-                                />
-                            </div>
-
-                            <button type="submit" disabled={cargando}>
-                                {cargando ? 'Ingresando...' : 'Entrar'}
-                            </button>
-                        </form>
-                    </>
-                )}
+                    <button type="submit" disabled={cargando}>
+                        {cargando ? 'Ingresando...' : 'Entrar'}
+                    </button>
+                </form>
 
                 <p>
                     <Link to="/">Volver al inicio</Link>

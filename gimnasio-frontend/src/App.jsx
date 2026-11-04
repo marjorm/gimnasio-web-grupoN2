@@ -1,4 +1,3 @@
-
 import { Routes, Route } from "react-router-dom";
 import Layout from "./components/layout/Layout.jsx";
 import Inicio from "./pages/Inicio.jsx";
@@ -21,18 +20,16 @@ import Login from "./pages/Login.jsx";
 import "./App.css";
 
 function App() {
-    // Definir la funcion de comprobación que espera tu AuthProvider
     const comprobarSesionReal = async () => {
         const usuario = localStorage.getItem('usuario');
-        return usuario !== null;
+        const token = localStorage.getItem('token');
+        return usuario !== null || token !== null;
     };
 
     return (
-        // Solo dejar el AuthProvider (el BrowserRouter ya esta en main.jsx)
         <AuthProvider comprobarSesion={comprobarSesionReal}>
             <Routes>
                 <Route element={<Layout />}>
-                    {/* Rutas publicas */}
                     <Route path="/" element={<Inicio />} />
                     <Route path="/contactos" element={<Contactos />} />
                     <Route path="/servicios" element={<Servicios />} />
@@ -42,12 +39,10 @@ function App() {
                     <Route path="/maquinas" element={<Maquinas />} />
                     <Route path="/instructores" element={<Instructores />} />
 
-
-                    {/* Rutas protegidas (redirigen a /login si no hay sesión) */}
                     <Route
                         path="/rutinas"
                         element={
-                            <ProtectedRoute>
+                            <ProtectedRoute rolesPermitidos={['CLIENTE', 'INSTRUCTOR', 'ADMIN']}>
                                 <Rutinas />
                             </ProtectedRoute>
                         }
@@ -56,7 +51,7 @@ function App() {
                     <Route
                         path="/inscripcion"
                         element={
-                            <ProtectedRoute>
+                            <ProtectedRoute rolesPermitidos={['CLIENTE', 'ADMIN']}>
                                 <Inscripcion />
                             </ProtectedRoute>
                         }
@@ -65,7 +60,7 @@ function App() {
                     <Route
                         path="/mantenimiento"
                         element={
-                            <ProtectedRoute>
+                            <ProtectedRoute rolesPermitidos={['ADMIN']}>
                                 <Mantenimiento />
                             </ProtectedRoute>
                         }
@@ -74,17 +69,13 @@ function App() {
                     <Route
                         path="/desinscribirse"
                         element={
-                            <ProtectedRoute>
+                            <ProtectedRoute rolesPermitidos={['CLIENTE', 'ADMIN']}>
                                 <PaginaPendiente nombre="Desinscribirse" />
                             </ProtectedRoute>
                         }
                     />
 
-                    {/* Ruta 404 */}
-                    <Route
-                        path="*"
-                        element={<NoEncontrada />}
-                    />
+                    <Route path="*" element={<NoEncontrada />} />
                 </Route>
             </Routes>
         </AuthProvider>

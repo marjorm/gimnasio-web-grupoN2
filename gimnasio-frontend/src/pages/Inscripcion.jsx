@@ -1,80 +1,96 @@
-import { useEffect, useState } from 'react';
-import FormularioInscripcion from '../components/forms/FormularioInscripcion';
-import { cursoService } from '../services/cursoService';
+import { useState, useEffect } from 'react';
 import { rutinaService } from '../services/rutinaService';
+import MensajeEstado from '../components/ui/MensajeEstado';
 
-export default function Inscripcion() {
-    const [cursos, setCursos] = useState([]);
+export default function Rutinas() {
     const [rutinas, setRutinas] = useState([]);
-    const [cargando, setCargando] = useState(true);
-    const [error, setError] = useState('');
-    const [mensaje, setMensaje] = useState('');
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState(null);
 
-useEffect(() => {
-        let activo = true;
-
-        Promise.all([
-            cursoService.obtenerTodos(),
-            rutinaService.obtenerTodas()
-        ])
-            .then(([listaCursos, listaRutinas]) => {
-                if (!activo) return;
-
-                setCursos(Array.isArray(listaCursos) ? listaCursos : []);
-                setRutinas(Array.isArray(listaRutinas) ? listaRutinas : []);
-            })
-            .catch((err) => {
-                if (activo) {
-                    setError(
-                        err.message || 'No se pudieron cargar cursos y rutinas. Verifique el servidor.'
-                    );
-                }
-            })
-            .finally(() => {
-                if (activo) setCargando(false);
-            });
-
-        return () => {
-            activo = false;
+    useEffect(() => {
+        const cargarMisRutinas = async () => {
+            try {
+                setLoading(true);
+                const dataRutinas = await rutinaService.obtenerMisRutinas();
+                setRutinas(Array.isArray(dataRutinas) ? dataRutinas : []);
+                setError(null);
+            } catch (err) {
+                console.error(err);
+                setError('No se pudieron cargar sus rutinas desde el servidor. Comprueba la conexión.');
+            } finally {
+                setLoading(false);
+            }
         };
+
+        cargarMisRutinas();
     }, []);
 
-    const verificarInscripcion = () => {
-        setMensaje(
-            'Los datos del formulario son válidos, pero NO se registró ' +
-            'ninguna inscripción. El servicio de inscripciones del backend ' +
-            'todavía no está implementado.'
-        );
-    };
-
     return (
-        <section style={{ padding: 20 }}>
-            <h2>Inscripción a cursos y rutinas</h2>
-
-            <p>
-                Esta sección permite revisar los datos de una solicitud.
-                Actualmente no registra inscripciones.
-            </p>
-
-            {cargando && <p>Cargando opciones...</p>}
-
-            {error && (
-                <p role="alert" style={{ color: '#b00020' }}>
-                    {error}
+        <div>
+            <section>
+                <h2>Mis rutinas personalizadas</h2>
+                <p className="intro-seccion">
+                    Aquí puedes consultar el detalle de las rutinas que te han sido asignadas en el gimnasio.
                 </p>
-            )}
+            </section>
 
-            {mensaje && (
-                <p role="status">{mensaje}</p>
-            )}
+            <section aria-labelledby="rutinas-asignadas">
+                <h2 id="rutinas-asignadas">Rutinas asignadas</h2>
 
-            {!cargando && !error && (
-                <FormularioInscripcion
-                    cursos={cursos}
-                    rutinas={rutinas}
-                    onSubmit={verificarInscripcion}
+                <MensajeEstado
+                    loading={loading}
+                    error={error}
+                    mensajeVacio="No tienes rutinas registradas en este momento."
+                    datosCount={rutinas.length}
                 />
-            )}
-        </section>
+
+                {!loading && !error && rutinas.length > 0 && (
+                    <div className="tabla-responsive" style={{ marginTop: '20px' }}>
+                        <table>
+                            <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Instructor</th>
+                                <th>Máquina ID</th>
+                                <th>Fecha</th>
+                                <th>Duración</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            {rutinas.map((r) => {
+                                const idVal = r.id || r.idRutina;
+
+                                const nombreInstructor = r.instructor
+                                    ? `${r.instructor.nombre || ''} ${r.instructor.apellido1 || r.instructor.apellido || ''}`.trim()
+                                    : 'Sin asignar';
+
+                                const maquinaVal = typeof r.maquina === 'object'
+                                    ? (r.maquina?.id || r.maquina?.nombre || 'General')
+                                    : (r.maquina || r.maquinaId || 'General');
+
+                                const fechaVal = r.fecha_Rutina || r.fechaRutina || r.fecha || 'N/A';
+                                const horasVal = r.horas ? `${r.horas} hora(s)` : 'No especificada';
+
+                                return (
+                                    <tr key={idVal}>
+                                        <td><strong>{idVal}</strong></td>
+                                        <td>{nombreInstructor}</td>
+                                        <td>{maquinaVal}</td>
+                                        <td>{fechaVal}</td>
+                                        <td>{horasVal}</td>
+                                    </tr>
+                                );
+                            })}
+                            </tbody>
+                        </table>
+                    </div>
+                )}
+            </section>
+
+            <aside className="nota-informativa" style={{ marginTop: '30px' }}>
+                <h2>Recomendaciones</h2>
+                <p>Las rutinas se asignan de acuerdo con tus objetivos personales. Sigue las instrucciones de tu instructor y mantén una buena hidratación.</p>
+            </aside>
+        </div>
     );
 }

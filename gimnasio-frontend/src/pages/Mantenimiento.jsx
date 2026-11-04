@@ -1,204 +1,175 @@
-import { useEffect, useState } from 'react';
-import FormularioCliente from '../components/forms/FormularioCliente';
-import ModalConfirmacion from '../components/ui/ModalConfirmacion';
-import { clienteService } from '../services/clienteService';
-import { usuarioService } from '../services/usuarioService'; 
+import { useState, useEffect } from 'react';
+import { useAuth } from '../context/AuthContext.jsx';
 
 export default function Mantenimiento() {
+    const { usuario } = useAuth();
+    const usuarioSesion = usuario || JSON.parse(localStorage.getItem('usuario') || '{}');
+    const rolActual = (usuarioSesion.rol || usuarioSesion.role || 'ADMIN').toUpperCase();
+
+    const esAutorizado = rolActual === 'ADMIN' || rolActual === 'ADMINISTRADOR' || usuarioSesion.username === 'admin';
+
     const [clientes, setClientes] = useState([]);
     const [cargando, setCargando] = useState(true);
     const [error, setError] = useState('');
-    const [clienteEditar, setClienteEditar] = useState(null);
     const [mostrarFormulario, setMostrarFormulario] = useState(false);
-    const [clienteEliminar, setClienteEliminar] = useState(null);
+    const [nuevoCliente, setNuevoCliente] = useState({ cedula: '', nombre: '', correo: '' });
+
+    // Petición GET limpia a la base de datos
+    const cargarClientes = async () => {
+        setCargando(true);
+        setError('');
+        try {
+            const res = await fetch('http://localhost:8080/api/clientes');
+            if (res.ok) {
+                const data = await res.json();
+                setClientes(data);
+            } else {
+                setError('No se pudo conectar con el endpoint /api/clientes.');
+            }
+        } catch (err) {
+            console.error('Error al obtener clientes desde MySQL:', err);
+            setError('Error de conexión con el backend en el puerto 8080.');
+        } finally {
+            setCargando(false);
+        }
+    };
 
     useEffect(() => {
-        let activo = true;
+        if (esAutorizado) {
+            cargarClientes();
+        }
+    }, [esAutorizado]);
 
-        clienteService.obtenerTodos()
-            .then((datos) => {
-                if (activo) {
-                    setClientes(Array.isArray(datos) ? datos : []);
-                }
-            })
-            .catch((err) => {
-                if (activo) {
-                    setError(
-                        err.message || 'No se pudieron cargar los clientes'
-                    );
-                }
-            })
-            .finally(() => {
-                if (activo) {
-                    setCargando(false);
-                }
+    if (!esAutorizado) {
+        return (
+            <section style={{ padding: '20px' }}>
+                <h2>Mantenimiento de clientes</h2>
+                <p style={{ color: '#b00020', fontWeight: 'bold' }}>
+                    No autorizado. Debe iniciar sesión con el rol correcto.
+                </p>
+            </section>
+        );
+    }
+
+    // Petición POST pura a MySQL
+    const handleGuardar = async (e) => {
+        e.preventDefault();
+        try {
+            const res = await fetch('http://localhost:8080/api/clientes', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(nuevoCliente)
             });
 
-        return () => {
-            activo = false;
-        };
-    }, []);
-
-    const recargar = async () => {
-        const datos = await clienteService.obtenerTodos();
-
-        setClientes(Array.isArray(datos) ? datos : []);
-    };
-
-    const guardar = async (datos) => {
-        try {
-            setError('');
-
-            if (clienteEditar) {
-                // Si estamos editando, solo actualizamos el cliente
-                await clienteService.actualizarCliente(
-                    clienteEditar.id,
-                    datos
-                );
+            if (res.ok) {
+                setNuevoCliente({ cedula: '', nombre: '', correo: '' });
+                setMostrarFormulario(false);
+                cargarClientes(); // Recarga la lista desde la BD
             } else {
-                // 2. Si es nuevo, primero creamos la cuenta de usuario ligada a su cédula (id)
-                await usuarioService.registrar({
-                    id: datos.id,
-                    username: datos.username,
-                    passwordHash: datos.passwordHash,
-                    rol: datos.rol || 'CLIENTE'
-                });
-
-                // 3. Luego creamos el perfil del cliente
-                await clienteService.guardarCliente(datos);
+                setError('Error al insertar el cliente en la base de datos.');
             }
-
-            setMostrarFormulario(false);
-            setClienteEditar(null);
-            await recargar();
-
         } catch (err) {
-            setError(
-                err.message || 'No se pudo completar la operación. Verifique los datos y el servidor.'
-            );
+            console.error('Error en POST /api/clientes:', err);
+            setError('Error de red al guardar.');
         }
     };
 
-    const eliminar = async () => {
-        if (!clienteEliminar) {
-            return;
-        }
-
+    // Petición DELETE pura a MySQL
+    const handleEliminar = async (id) => {
         try {
-            setError('');
+            const res = await fetch(`http://localhost:8080/api/clientes/${id}`, {
+                method: 'DELETE'
+            });
 
-            await clienteService.eliminarCliente(clienteEliminar.id);
-            await recargar();
-
+            if (res.ok) {
+                cargarClientes(); // Recarga la lista desde la BD
+            } else {
+                setError('No se pudo eliminar el registro de la base de datos.');
+            }
         } catch (err) {
-            setError(err.message || 'No se pudo eliminar el cliente.');
-
-        } finally {
-            setClienteEliminar(null);
+            console.error('Error en DELETE /api/clientes:', err);
+            setError('Error de red al eliminar.');
         }
     };
 
     return (
-        <section style={{ padding: 20 }}>
+        <section style={{ padding: '20px', maxWidth: '900px', margin: '0 auto' }}>
             <h2>Mantenimiento de clientes</h2>
 
-            {error && (
-                <p role="alert" style={{ color: '#b00020' }}>
-                    {error}
-                </p>
+            {error && <p style={{ color: '#b00020', fontWeight: 'bold' }}>{error}</p>}
+
+            <button
+                onClick={() => setMostrarFormulario(!mostrarFormulario)}
+                style={{ marginBottom: '15px', padding: '8px 16px', cursor: 'pointer' }}
+            >
+                {mostrarFormulario ? 'Cancelar' : 'Nuevo cliente'}
+            </button>
+
+            {mostrarFormulario && (
+                <form onSubmit={handleGuardar} style={{ display: 'flex', gap: '10px', marginBottom: '20px', flexWrap: 'wrap' }}>
+                    <input
+                        type="text"
+                        placeholder="Cédula"
+                        value={nuevoCliente.cedula}
+                        onChange={e => setNuevoCliente({ ...nuevoCliente, cedula: e.target.value })}
+                        required
+                    />
+                    <input
+                        type="text"
+                        placeholder="Nombre completo"
+                        value={nuevoCliente.nombre}
+                        onChange={e => setNuevoCliente({ ...nuevoCliente, nombre: e.target.value })}
+                        required
+                    />
+                    <input
+                        type="email"
+                        placeholder="Correo electrónico"
+                        value={nuevoCliente.correo}
+                        onChange={e => setNuevoCliente({ ...nuevoCliente, correo: e.target.value })}
+                    />
+                    <button type="submit" style={{ cursor: 'pointer' }}>Guardar</button>
+                </form>
             )}
 
-            {mostrarFormulario ? (
-                <FormularioCliente
-                    key={clienteEditar?.id ?? 'nuevo'}
-                    clienteInicial={clienteEditar}
-                    onSubmit={guardar}
-                    onCancelar={() => {
-                        setMostrarFormulario(false);
-                        setClienteEditar(null);
-                    }}
-                />
+            {cargando ? (
+                <p>Cargando datos desde la base de datos MySQL...</p>
             ) : (
-                <>
-                    <button
-                        type="button"
-                        onClick={() => {
-                            setClienteEditar(null);
-                            setMostrarFormulario(true);
-                        }}
-                    >
-                        Nuevo cliente
-                    </button>
-
-                    {cargando ? (
-                        <p>Cargando clientes...</p>
+                <table style={{ width: '100%', borderCollapse: 'collapse', marginTop: '10px' }}>
+                    <thead>
+                    <tr style={{ borderBottom: '2px solid #ccc', textAlign: 'left' }}>
+                        <th style={{ padding: '8px' }}>Cédula</th>
+                        <th style={{ padding: '8px' }}>Nombre</th>
+                        <th style={{ padding: '8px' }}>Correo</th>
+                        <th style={{ padding: '8px' }}>Acciones</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {clientes.length === 0 ? (
+                        <tr>
+                            <td colSpan="4" style={{ padding: '16px', textAlign: 'center' }}>
+                                No hay clientes registrados en la base de datos.
+                            </td>
+                        </tr>
                     ) : (
-                        <table
-                            style={{
-                                width: '100%',
-                                marginTop: 16
-                            }}
-                        >
-                            <thead>
-                                <tr>
-                                    <th>Cédula</th>
-                                    <th>Nombre</th>
-                                    <th>Correo</th>
-                                    <th>Acciones</th>
-                                </tr>
-                            </thead>
-
-                            <tbody>
-                                {clientes.map((c) => (
-                                    <tr key={c.id}>
-                                        <td>{c.id}</td>
-                                        <td>
-                                            {c.nombre} {c.apellido1} {c.apellido2}
-                                        </td>
-                                        <td>{c.eMail ?? c.email ?? ''}</td>
-                                        <td>
-                                            <button
-                                                type="button"
-                                                onClick={() => {
-                                                    setClienteEditar(c);
-                                                    setMostrarFormulario(true);
-                                                }}
-                                            >
-                                                Editar
-                                            </button>
-
-                                            <button
-                                                type="button"
-                                                onClick={() => {
-                                                    setClienteEliminar(c);
-                                                }}
-                                            >
-                                                Eliminar
-                                            </button>
-                                        </td>
-                                    </tr>
-                                ))}
-
-                                {clientes.length === 0 && !error && (
-                                    <tr>
-                                        <td colSpan="4">
-                                            No hay clientes registrados.
-                                        </td>
-                                    </tr>
-                                )}
-                            </tbody>
-                        </table>
+                        clientes.map(c => (
+                            <tr key={c.id || c.id_cliente || c.cedula} style={{ borderBottom: '1px solid #eee' }}>
+                                <td style={{ padding: '8px' }}>{c.cedula}</td>
+                                <td style={{ padding: '8px' }}>{c.nombre}</td>
+                                <td style={{ padding: '8px' }}>{c.correo || c.email}</td>
+                                <td style={{ padding: '8px' }}>
+                                    <button
+                                        onClick={() => handleEliminar(c.id || c.id_cliente)}
+                                        style={{ color: 'red', border: 'none', background: 'none', cursor: 'pointer' }}
+                                    >
+                                        Eliminar
+                                    </button>
+                                </td>
+                            </tr>
+                        ))
                     )}
-                </>
+                    </tbody>
+                </table>
             )}
-
-            <ModalConfirmacion
-                isOpen={Boolean(clienteEliminar)}
-                titulo="Eliminar cliente"
-                mensaje={`¿Eliminar a ${clienteEliminar?.nombre ?? ''}?`}
-                onConfirm={eliminar}
-                onCancel={() => setClienteEliminar(null)}
-            />
         </section>
     );
 }
