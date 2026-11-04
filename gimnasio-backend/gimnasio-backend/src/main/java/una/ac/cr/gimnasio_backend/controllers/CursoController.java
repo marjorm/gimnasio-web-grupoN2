@@ -7,6 +7,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import una.ac.cr.gimnasio_backend.models.Curso;
 import una.ac.cr.gimnasio_backend.services.CursoService;
+import org.springframework.web.server.ResponseStatusException;
+import una.ac.cr.gimnasio_backend.models.Usuario;
 
 import java.util.List;
 
@@ -32,21 +34,47 @@ public class CursoController {
     }
 
     @PostMapping
-    public ResponseEntity<Curso> guardarCurso(@Valid @RequestBody Curso curso) {
+    public ResponseEntity<Curso> guardarCurso(@Valid @RequestBody Curso curso, HttpSession session) {
+        validarAdministradorOInstructor(session);
         Curso nuevoCurso = cursoService.guardarCurso(curso);
         return ResponseEntity.status(HttpStatus.CREATED).body(nuevoCurso);
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Curso> actualizarCurso(@PathVariable Integer id, @Valid @RequestBody Curso cursoDetalles) {
+    public ResponseEntity<Curso> actualizarCurso(@PathVariable Integer id, @Valid @RequestBody Curso cursoDetalles,
+            HttpSession session) {
+        validarAdministradorOInstructor(session);
         Curso cursoActualizado = cursoService.actualizarCurso(id, cursoDetalles);
         return ResponseEntity.ok(cursoActualizado);
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> eliminarCurso(@PathVariable Integer id) {
+    public ResponseEntity<Void> eliminarCurso(@PathVariable Integer id, HttpSession session) {
+        validarAdministradorOInstructor(session);
         cursoService.eliminarCurso(id);
-        return ResponseEntity.noContent().build(); // Retorna 204 No Content
+        return ResponseEntity.noContent().build();
+    }
+
+
+    private void validarAdministradorOInstructor(HttpSession session) {
+
+        Usuario usuarioLogueado = (Usuario) session.getAttribute("usuarioLogueado");
+
+        if (usuarioLogueado == null) {
+            throw new ResponseStatusException(
+                    HttpStatus.UNAUTHORIZED,
+                    "Debe iniciar sesión."
+            );
+        }
+
+        String rol = usuarioLogueado.getRol();
+
+        if (!"ADMIN".equals(rol) && !"INSTRUCTOR".equals(rol)) {
+            throw new ResponseStatusException(
+                    HttpStatus.FORBIDDEN,
+                    "No tiene permisos para realizar esta acción."
+            );
+        }
     }
 
 }

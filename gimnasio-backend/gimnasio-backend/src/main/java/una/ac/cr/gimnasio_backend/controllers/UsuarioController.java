@@ -34,9 +34,28 @@ public class UsuarioController {
     }
 
     @PostMapping
-    public ResponseEntity<Usuario> crearUsuario( @RequestBody Usuario nuevoUsuario) {
+    public ResponseEntity<Usuario> crearUsuario(@RequestBody Usuario nuevoUsuario, HttpSession session) {
+        Usuario usuarioLogueado = (Usuario) session.getAttribute("usuarioLogueado");
+        String rolSolicitado = nuevoUsuario.getRol();
+
+        // Solo ADMIN puede crear cuentas ADMIN o INSTRUCTOR
+        if ("ADMIN".equals(rolSolicitado) ||
+                "INSTRUCTOR".equals(rolSolicitado)) {
+
+            if (usuarioLogueado == null) {
+                return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+            }
+
+            if (!"ADMIN".equals(usuarioLogueado.getRol())) {
+                return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+            }
+        } else if (!"CLIENTE".equals(rolSolicitado)) {
+            return ResponseEntity.badRequest().build();
+        }
+
         Usuario usuarioCreado = usuarioService.registrarUsuario(nuevoUsuario);
-        usuarioCreado.setPasswordHash("NA"); // Ocultamos el hash por seguridad
+        usuarioCreado.setPasswordHash("NA");
+
         return ResponseEntity.status(HttpStatus.CREATED).body(usuarioCreado);
     }
 
@@ -45,6 +64,25 @@ public class UsuarioController {
         // Invalida la sesion actual en la memoria del servidor
         session.invalidate();
         return ResponseEntity.ok().body("Sesión cerrada exitosamente");
+    }
+
+    @GetMapping("/sesion")
+    public ResponseEntity<?> verificarSesion(HttpSession session) {
+
+        Usuario usuarioLogueado =
+                (Usuario) session.getAttribute("usuarioLogueado");
+
+        if (usuarioLogueado == null) {
+            return ResponseEntity
+                    .status(HttpStatus.UNAUTHORIZED)
+                    .body("No hay una sesión activa");
+        }
+
+        return ResponseEntity.ok(Map.of(
+                "id", usuarioLogueado.getId(),
+                "username", usuarioLogueado.getUsername(),
+                "rol", usuarioLogueado.getRol()
+        ));
     }
 
 }

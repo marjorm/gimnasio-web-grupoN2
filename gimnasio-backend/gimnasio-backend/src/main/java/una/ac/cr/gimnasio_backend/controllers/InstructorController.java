@@ -49,13 +49,21 @@ public class InstructorController {
     }
 
     private void validarAdmin(HttpSession session) {
-        Usuario usuarioLogueado = (Usuario) session.getAttribute("usuarioLogueado");
+        Usuario usuarioLogueado =
+                (Usuario) session.getAttribute("usuarioLogueado");
 
-        // Validar si no ha iniciado sesión o si su rol no es ADMIN ni INSTRUCTOR
-        if (usuarioLogueado == null ||
-                !"INSTRUCTOR".equals(usuarioLogueado.getRol())) {
+        if (usuarioLogueado == null) {
+            throw new ResponseStatusException(
+                    HttpStatus.UNAUTHORIZED,
+                    "Debe iniciar sesión."
+            );
+        }
 
-            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "No autorizado. Debe iniciar sesión con el rol correcto.");
+        if (!"ADMIN".equals(usuarioLogueado.getRol())) {
+            throw new ResponseStatusException(
+                    HttpStatus.FORBIDDEN,
+                    "No tiene permisos para realizar esta acción."
+            );
         }
     }
 }
