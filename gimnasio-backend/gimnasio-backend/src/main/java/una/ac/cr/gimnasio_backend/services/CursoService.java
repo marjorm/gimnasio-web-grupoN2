@@ -50,7 +50,7 @@ public class CursoService {
 
         if (cursoRepository.existsById(curso.getId())) {
             throw new ResponseStatusException(
-                    HttpStatus.BAD_REQUEST,
+                    HttpStatus.CONFLICT,
                     "Ya existe un curso registrado con ese ID."
             );
         }

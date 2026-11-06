@@ -10,6 +10,7 @@ import org.springframework.ws.config.annotation.EnableWs;
 import org.springframework.ws.transport.http.MessageDispatcherServlet;
 import org.springframework.ws.wsdl.wsdl11.SimpleWsdl11Definition;
 import org.springframework.oxm.jaxb.Jaxb2Marshaller;
+import org.springframework.xml.xsd.SimpleXsdSchema;
 
 @EnableWs
 @Configuration
@@ -27,6 +28,13 @@ public class WebServiceConfig {
     @Bean(name = "cursos")
     public SimpleWsdl11Definition cursosWsdl() {
         return new SimpleWsdl11Definition(new ClassPathResource("soap/cursos.wsdl") );
+    }
+
+    @Bean(name = "cursosSchema")
+    public SimpleXsdSchema cursosSchema() {
+        return new SimpleXsdSchema(
+            new ClassPathResource("soap/cursos.xsd")
+        );
     }
 
     @Bean
