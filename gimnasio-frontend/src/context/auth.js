@@ -5,10 +5,16 @@ export const AuthContext = createContext(null);
 export function useAuth() {
     const contexto = useContext(AuthContext);
 
+
     if (contexto === null) {
-        throw new Error(
-            "useAuth debe utilizarse dentro de AuthProvider"
-        );
+        return {
+            estado: "sin-sesion",
+            autenticado: false,
+            verificando: false,
+            usuario: null,
+            login: async () => ({ success: false }),
+            logout: async () => {}
+        };
     }
 
     return contexto;

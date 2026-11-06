@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import FormularioCliente from '../components/forms/FormularioCliente';
 import ModalConfirmacion from '../components/ui/ModalConfirmacion';
 import { clienteService } from '../services/clienteService';
-import { usuarioService } from '../services/usuarioService'; 
+import { usuarioService } from '../services/usuarioService';
 
 export default function Mantenimiento() {
     const [clientes, setClientes] = useState([]);

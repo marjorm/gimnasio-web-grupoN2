@@ -9,15 +9,16 @@ export default function Maquinas() {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
 
-    // Cargar las máquinas al montar el componente
+
     useEffect(() => {
         const cargarMaquinas = async () => {
             try {
                 setLoading(true);
                 const data = await maquinaService.obtenerTodas();
-                setMaquinas(data);
+                setMaquinas(Array.isArray(data) ? data : []);
                 setError(null);
-            } catch {
+            } catch (err) {
+                console.error('Error al consultar inventario de máquinas:', err);
                 setError('No se pudieron cargar las máquinas desde el servidor. Comprueba la conexión.');
             } finally {
                 setLoading(false);
@@ -31,26 +32,43 @@ export default function Maquinas() {
         <div>
             <section>
                 <h2>Máquinas del gimnasio</h2>
-                <p>Conoce los equipos disponibles para entrenamiento cardiovascular, fuerza y acondicionamiento actualizados desde el sistema.</p>
+                <p className="intro-seccion">
+                    Conoce los equipos disponibles para entrenamiento cardiovascular, fuerza y acondicionamiento actualizados desde el sistema.
+                </p>
 
-                {/* Manejo de estados de carga, error o lista vacía */}
-                <MensajeEstado 
-                    loading={loading} 
-                    error={error} 
-                    mensajeVacio="No hay máquinas registradas en este momento." 
-                    datosCount={maquinas.length} 
+                {}
+                <MensajeEstado
+                    loading={loading}
+                    error={error}
+                    mensajeVacio="No hay máquinas registradas en este momento."
+                    datosCount={maquinas.length}
                 />
 
-                {/* Renderizado de la lista de máquinas mediante componentes */}
-                <ListaDatos 
-                    items={maquinas} 
-                    renderItem={(maquina) => (
-                        <Tarjeta titulo={`Máquina: ${maquina.descripcion}`}>
-                            <p><strong>ID:</strong> {maquina.id}</p>
-                            <p><strong>Estado:</strong> {maquina.estado || 'Disponible'}</p>
-                        </Tarjeta>
-                    )}
-                />
+                {}
+                <div className="maquinas-grid" style={{ marginTop: '20px' }}>
+                    <ListaDatos
+                        items={maquinas}
+                        renderItem={(maquina) => {
+                            const idVal = maquina.id || maquina.idMaquina;
+                            const tituloTarjeta = maquina.nombre || maquina.descripcion || `Máquina ID: ${idVal}`;
+
+                            return (
+                                <div className="maquina-card" key={idVal}>
+                                    <Tarjeta titulo={tituloTarjeta}>
+                                        <p><strong>ID:</strong> {idVal}</p>
+                                        <p><strong>Estado:</strong> {maquina.estado || 'Disponible'}</p>
+                                        {maquina.ubicacion && (
+                                            <p><strong>Ubicación:</strong> {maquina.ubicacion}</p>
+                                        )}
+                                        {maquina.descripcion && maquina.nombre && (
+                                            <p><strong>Detalles:</strong> {maquina.descripcion}</p>
+                                        )}
+                                    </Tarjeta>
+                                </div>
+                            );
+                        }}
+                    />
+                </div>
             </section>
 
             <aside className="nota-informativa" style={{ marginTop: '30px' }}>

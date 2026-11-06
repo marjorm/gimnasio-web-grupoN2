@@ -2,8 +2,11 @@ import { useEffect, useState } from 'react';
 import FormularioInscripcion from '../components/forms/FormularioInscripcion';
 import { cursoService } from '../services/cursoService';
 import { rutinaService } from '../services/rutinaService';
+import { useAuth } from '../context/auth.js';
 
 export default function Inscripcion() {
+    const { usuario } = useAuth();
+    const rol = usuario?.rol;
     const [cursos, setCursos] = useState([]);
     const [rutinas, setRutinas] = useState([]);
     const [cargando, setCargando] = useState(true);
@@ -11,11 +14,14 @@ export default function Inscripcion() {
     const [mensaje, setMensaje] = useState('');
 
 useEffect(() => {
+        if (!rol) return;
         let activo = true;
 
         Promise.all([
             cursoService.obtenerTodos(),
-            rutinaService.obtenerTodas()
+            (rol === 'CLIENTE'
+                ? rutinaService.obtenerMisRutinas()
+                : rutinaService.obtenerTodas())
         ])
             .then(([listaCursos, listaRutinas]) => {
                 if (!activo) return;
@@ -37,7 +43,7 @@ useEffect(() => {
         return () => {
             activo = false;
         };
-    }, []);
+    }, [rol]);
 
     const verificarInscripcion = () => {
         setMensaje(
