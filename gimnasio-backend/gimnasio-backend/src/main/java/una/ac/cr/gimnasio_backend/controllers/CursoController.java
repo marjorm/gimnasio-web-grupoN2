@@ -44,6 +44,7 @@ public class CursoController {
     public ResponseEntity<Curso> actualizarCurso(@PathVariable Integer id, @Valid @RequestBody Curso cursoDetalles,
             HttpSession session) {
         validarAdministradorOInstructor(session);
+        if (!id.equals(cursoDetalles.getId())) throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "No se permite modificar el ID del curso.");
         Curso cursoActualizado = cursoService.actualizarCurso(id, cursoDetalles);
         return ResponseEntity.ok(cursoActualizado);
     }

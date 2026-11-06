@@ -1,49 +1,6 @@
-
-import FormularioContacto from "../components/forms/FormularioContacto.jsx";
-
-function Contactos() {
-    return (
-        <section className="pagina-contactos">
-            <h2>Contáctanos</h2>
-
-            <p>
-                Si tienes alguna consulta sobre nuestros servicios,
-                puedes comunicarte con nosotros.
-            </p>
-
-            <h3>Información de contacto</h3>
-
-            <address>
-                <p>
-                    <strong>Teléfono:</strong>8888-8888
-                </p>
-
-                <p>
-                    <strong>Dirección:</strong> Heredia
-                </p>
-
-                <p>
-                    <strong>Correo electrónico:</strong> gimnacioGrupo2@ejemplo.com
-                </p>
-            </address>
-
-            <h3>Redes sociales</h3>
-
-            <p>
-                Próximamente encontrarás aquí nuestros enlaces
-                a Facebook e Instagram.
-            </p>
-
-            <h3>Formulario de contacto</h3>
-
-            <p>
-                Puedes verificar los datos del mensaje en este formulario.
-                Todavía no se envían mensajes al servidor.
-            </p>
-
-            <FormularioContacto />
-        </section>
-    );
-}
-
-export default Contactos;
+import FormularioContacto from '../components/forms/FormularioContacto.jsx';
+export default function Contactos(){return <section className="e6-panel"><h2>Contactos</h2>
+ <p>Teléfono de demostración: 8888-8888 · Heredia · Correo de demostración: gimnasioGrupo2@ejemplo.com</p>
+ <p>Redes sociales (se requiere confirmar los perfiles oficiales del gimnasio):</p>
+ <div className="e6-enlaces"><a href="https://www.facebook.com/" target="_blank" rel="noopener noreferrer"><img src="/img/facebook.svg" alt="Facebook"/> Facebook</a><a href="https://www.instagram.com/" target="_blank" rel="noopener noreferrer"><img src="/img/instagram.svg" alt="Instagram"/> Instagram</a></div>
+ <h3>Enviar consulta</h3><FormularioContacto/></section>;}

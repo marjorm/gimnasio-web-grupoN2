@@ -1,0 +1,170 @@
+{
+  "fecha": "2026-11-06T04:58:24.712Z",
+  "base": "http://127.0.0.1:5174",
+  "repo": "C:\\Users\\crism\\gimnasio-entregable6-final",
+  "images": 17,
+  "pages": [
+    {
+      "name": "admin_rutinas",
+      "path": "/rutinas",
+      "actualPath": "/rutinas",
+      "heading": "Rutinas registradas",
+      "imageCount": 0,
+      "brokenImages": [],
+      "visibleErrors": []
+    },
+    {
+      "name": "admin_inscripcion",
+      "path": "/inscripcion",
+      "actualPath": "/inscripcion",
+      "heading": "Inscripción real a cursos y rutinas",
+      "imageCount": 0,
+      "brokenImages": [],
+      "visibleErrors": []
+    },
+    {
+      "name": "admin_mantenimiento",
+      "path": "/mantenimiento",
+      "actualPath": "/mantenimiento",
+      "heading": "Mantenimiento integral",
+      "imageCount": 0,
+      "brokenImages": [],
+      "visibleErrors": []
+    },
+    {
+      "name": "admin_mantenimiento_clientes",
+      "path": "/mantenimiento",
+      "heading": "Mantenimiento integral",
+      "rows": 17,
+      "visibleErrors": []
+    },
+    {
+      "name": "admin_mantenimiento_cursos",
+      "path": "/mantenimiento",
+      "heading": "Mantenimiento integral",
+      "rows": 6,
+      "visibleErrors": []
+    },
+    {
+      "name": "admin_mantenimiento_maquinas",
+      "path": "/mantenimiento",
+      "heading": "Mantenimiento integral",
+      "rows": 7,
+      "visibleErrors": []
+    },
+    {
+      "name": "admin_mantenimiento_rutinas",
+      "path": "/mantenimiento",
+      "heading": "Mantenimiento integral",
+      "rows": 16,
+      "visibleErrors": []
+    },
+    {
+      "name": "admin_mantenimiento_historial",
+      "path": "/mantenimiento",
+      "heading": "Mantenimiento integral",
+      "rows": 16,
+      "visibleErrors": []
+    },
+    {
+      "name": "admin_mantenimiento_programacion",
+      "path": "/mantenimiento",
+      "heading": "Mantenimiento integral",
+      "rows": 6,
+      "visibleErrors": []
+    },
+    {
+      "name": "admin_mantenimiento_usuarios",
+      "path": "/mantenimiento",
+      "heading": "Mantenimiento integral",
+      "rows": 27,
+      "visibleErrors": []
+    },
+    {
+      "name": "admin_mantenimiento_pagos",
+      "path": "/mantenimiento",
+      "heading": "Mantenimiento integral",
+      "rows": 1,
+      "visibleErrors": []
+    },
+    {
+      "name": "admin_mantenimiento_contactos",
+      "path": "/mantenimiento",
+      "heading": "Mantenimiento integral",
+      "rows": 1,
+      "visibleErrors": []
+    },
+    {
+      "name": "cliente_rutinas",
+      "path": "/rutinas",
+      "actualPath": "/rutinas",
+      "heading": "Mis rutinas personalizadas",
+      "imageCount": 0,
+      "brokenImages": [],
+      "visibleErrors": []
+    },
+    {
+      "name": "cliente_inscripcion",
+      "path": "/inscripcion",
+      "actualPath": "/inscripcion",
+      "heading": "Inscripción real a cursos y rutinas",
+      "imageCount": 0,
+      "brokenImages": [],
+      "visibleErrors": []
+    },
+    {
+      "name": "cliente_desinscripcion",
+      "path": "/desinscribirse",
+      "actualPath": "/desinscribirse",
+      "heading": "Desinscribirse",
+      "imageCount": 0,
+      "brokenImages": [],
+      "visibleErrors": []
+    },
+    {
+      "name": "instructor_rutinas",
+      "path": "/rutinas",
+      "actualPath": "/rutinas",
+      "heading": "Rutinas registradas",
+      "imageCount": 0,
+      "brokenImages": [],
+      "visibleErrors": []
+    },
+    {
+      "name": "instructor_mantenimiento",
+      "path": "/mantenimiento",
+      "actualPath": "/mantenimiento",
+      "heading": "Mantenimiento integral",
+      "imageCount": 0,
+      "brokenImages": [],
+      "visibleErrors": []
+    }
+  ],
+  "errors": [
+    {
+      "page": "/login",
+      "type": "CONSOLE_ERROR",
+      "message": "Failed to load resource: the server responded with a status of 401 (Unauthorized)"
+    },
+    {
+      "page": "/",
+      "type": "CONSOLE_ERROR",
+      "message": "Failed to load resource: the server responded with a status of 401 (Unauthorized)"
+    },
+    {
+      "page": "/login",
+      "type": "CONSOLE_ERROR",
+      "message": "Failed to load resource: the server responded with a status of 401 (Unauthorized)"
+    },
+    {
+      "page": "/",
+      "type": "CONSOLE_ERROR",
+      "message": "Failed to load resource: the server responded with a status of 401 (Unauthorized)"
+    },
+    {
+      "page": "/login",
+      "type": "CONSOLE_ERROR",
+      "message": "Failed to load resource: the server responded with a status of 401 (Unauthorized)"
+    }
+  ]
+}

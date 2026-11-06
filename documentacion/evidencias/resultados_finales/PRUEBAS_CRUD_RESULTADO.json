@@ -1,0 +1,13 @@
+{
+    "estado":  "PASS",
+    "fecha":  "2026-11-06T01:24:27.0849957-06:00",
+    "base":  "gimnasio_entregable6_test",
+    "codigosHttpValidados":  45,
+    "reglasAdicionales":  [
+                              "cupos se decrementan",
+                              "curso lleno rechazado",
+                              "cupo se libera al cancelar",
+                              "llaves primarias y relaciones inmutables",
+                              "cinco modulos CRUD"
+                          ]
+}

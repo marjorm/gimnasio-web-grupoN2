@@ -1,0 +1,28 @@
+{
+    "fecha":  "2026-11-06T01:03:17.3103950-06:00",
+    "estado":  "PASS",
+    "mensaje":  "Java y React aprobados; 31 capturas reales, auditoria navegador PASS y 45 comprobaciones HTTP aprobadas. Evidencia seleccionada sin logs abiertos.",
+    "repositorio":  "https://github.com/marjorm/gimnasio-web-grupoN2",
+    "rama":  "feature/entregable6-integracion-final",
+    "fuente_local":  "C:\\Users\\crism\\gimnasio-entregable6-final",
+    "url_frontend":  "http://127.0.0.1:5175",
+    "url_backend":  "http://127.0.0.1:18082",
+    "base_de_prueba":  "gimnasio_entregable6_test",
+    "base_original":  "NO_MODIFICADA_POR_ESTE_SCRIPT",
+    "fases":  {
+                  "precondiciones":  "PASS",
+                  "react":  "PASS",
+                  "java":  "PASS",
+                  "backend":  "PASS",
+                  "vite":  "PASS",
+                  "capturas":  "PASS",
+                  "crud_y_cupos":  "PASS",
+                  "zip":  "PASS"
+              },
+    "java":  17,
+    "origenGitCommit":  "2c14d2dc947825c4bb6c3d04b519f07f08a47837",
+    "procesos":  {
+                     "vite_pid":  4784,
+                     "java_pid":  908
+                 }
+}

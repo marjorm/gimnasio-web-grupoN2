@@ -103,53 +103,53 @@ alter table rutinas add constraint fkrutina_cliente foreign key (cliente) refere
 alter table rutinas add constraint fk2rutina_instructor foreign key (instructor) references instructores (cod_instructor);
 
 --g. Insertar la siguiente información en las diferentes tablas.
- --Tabla cliente 
-insert into cliente (cedula, nombre, apellido_1, apellido_2, direccion, fecha_inscripcion, celular, tel_habitacion) 
+ --Tabla cliente
+insert into cliente (cedula, nombre, apellido_1, apellido_2, direccion, fecha_inscripcion, celular, tel_habitacion)
 values (200, 'maria', 'ruiz', 'ruiz', 'barva', '1995-01-01', 11111111, 22222222);
 
-insert into cliente (cedula, nombre, apellido_1, apellido_2, direccion, e_mail, fecha_inscripcion, celular, tel_habitacion) 
+insert into cliente (cedula, nombre, apellido_1, apellido_2, direccion, e_mail, fecha_inscripcion, celular, tel_habitacion)
 values (201, 'juan', 'paz', 'arias', 'alajuela', 'juan@hotmail.com', '1995-01-01', 22222222, 11111111);
 
-insert into cliente (cedula, nombre, apellido_1, apellido_2, fecha_inscripcion, celular, tel_habitacion) 
+insert into cliente (cedula, nombre, apellido_1, apellido_2, fecha_inscripcion, celular, tel_habitacion)
 values (202, 'pedro', 'perez', 'perez', '1998-04-20', 33333333, 33333335);
 
-insert into cliente (cedula, nombre, apellido_1, apellido_2, direccion, e_mail, fecha_inscripcion, celular, tel_habitacion) 
+insert into cliente (cedula, nombre, apellido_1, apellido_2, direccion, e_mail, fecha_inscripcion, celular, tel_habitacion)
 values (203, 'jose', 'castro', 'ruiz', 'santo domingo', 'jruiz@gmail.com', '1998-06-20', 44444444, 55555555);
 
-insert into cliente (cedula, nombre, apellido_1, apellido_2, direccion, e_mail, fecha_inscripcion, celular, tel_habitacion) 
+insert into cliente (cedula, nombre, apellido_1, apellido_2, direccion, e_mail, fecha_inscripcion, celular, tel_habitacion)
 values (204, 'martha', 'diaz', 'ruiz', 'pavas', 'mdiaz@yahoo.es', '2000-01-02', 22222229, 33333333);
 
-insert into cliente (cedula, nombre, apellido_1, apellido_2, e_mail, fecha_inscripcion, celular, tel_habitacion) 
+insert into cliente (cedula, nombre, apellido_1, apellido_2, e_mail, fecha_inscripcion, celular, tel_habitacion)
 values (205, 'xiomara', 'diaz', 'diaz', 'xdiaz@hotmail.com', '2000-02-03', 55555555, 11111119);
 
-insert into cliente (cedula, nombre, apellido_1, apellido_2, direccion, fecha_inscripcion, celular, tel_habitacion) 
+insert into cliente (cedula, nombre, apellido_1, apellido_2, direccion, fecha_inscripcion, celular, tel_habitacion)
 values (206, 'pablo', 'arias', 'arias', 'san jose', '2001-04-20', 55555556, 11111112);
 
-insert into cliente (cedula, nombre, apellido_1, apellido_2, direccion, e_mail, fecha_inscripcion, celular, tel_habitacion) 
+insert into cliente (cedula, nombre, apellido_1, apellido_2, direccion, e_mail, fecha_inscripcion, celular, tel_habitacion)
 values (207, 'ana', 'arias', 'arias', 'san pedro', 'arias@gmail.com', '2001-04-25', 55555556, 11111115);
 
-insert into cliente (cedula, nombre, apellido_1, apellido_2, direccion, fecha_inscripcion, celular, tel_habitacion) 
+insert into cliente (cedula, nombre, apellido_1, apellido_2, direccion, fecha_inscripcion, celular, tel_habitacion)
 values (208, 'carmen', 'paz', 'arias', 'san jose', '2002-04-20', 55555556, 11111115);
 
-insert into cliente (cedula, nombre, apellido_1, apellido_2, fecha_inscripcion, celular, tel_habitacion) 
+insert into cliente (cedula, nombre, apellido_1, apellido_2, fecha_inscripcion, celular, tel_habitacion)
 values (209, 'miguel', 'orias', 'arias', '2002-08-20', 55555557, 11111114);
 
-insert into cliente (cedula, nombre, apellido_1, apellido_2, direccion, fecha_inscripcion, celular, tel_habitacion) 
+insert into cliente (cedula, nombre, apellido_1, apellido_2, direccion, fecha_inscripcion, celular, tel_habitacion)
 values (210, 'julia', 'arias', 'cruz', 'san rafael', '2003-04-20', 55555559, 11111119);
 
-insert into cliente (cedula, nombre, apellido_1, apellido_2, fecha_inscripcion, celular, tel_habitacion) 
+insert into cliente (cedula, nombre, apellido_1, apellido_2, fecha_inscripcion, celular, tel_habitacion)
 values (211, 'paula', 'castillo', 'reyes', '2003-05-15', 66666666, 77777777);
 
-insert into cliente (cedula, nombre, apellido_1, apellido_2, direccion, e_mail, fecha_inscripcion, celular, tel_habitacion) 
+insert into cliente (cedula, nombre, apellido_1, apellido_2, direccion, e_mail, fecha_inscripcion, celular, tel_habitacion)
 values (212, 'david', 'arias', 'arias', 'san jose', 'darias@gmail.com', '2005-10-20', 88888888, 99999999);
 
-insert into cliente (cedula, nombre, apellido_1, apellido_2, direccion, e_mail, fecha_inscripcion, celular, tel_habitacion) 
+insert into cliente (cedula, nombre, apellido_1, apellido_2, direccion, e_mail, fecha_inscripcion, celular, tel_habitacion)
 values (213, 'andres', 'aguilar', 'rios', 'guadalupe', 'aaguilar@yahoo.com', '2007-12-10', 99999999, 88888888);
 
-insert into cliente (cedula, nombre, apellido_1, apellido_2, direccion, e_mail, fecha_inscripcion, celular, tel_habitacion) 
+insert into cliente (cedula, nombre, apellido_1, apellido_2, direccion, e_mail, fecha_inscripcion, celular, tel_habitacion)
 values (214, 'maria jose', 'villalta', 'paz', 'heredia', 'mjvillalta@gmail.com', '2011-04-20', 77777777, 66666666);
 
-insert into cliente (cedula, nombre, apellido_1, apellido_2, direccion, fecha_inscripcion, celular, tel_habitacion) 
+insert into cliente (cedula, nombre, apellido_1, apellido_2, direccion, fecha_inscripcion, celular, tel_habitacion)
 values (215, 'pablo jose', 'castillo', 'arias', 'san jose', '2011-04-20', 33333333, 66666666);
 
 -- Usuarios
@@ -174,31 +174,31 @@ insert into usuario (id_usuario, rol, username, password_hash) values (215, 'CLI
 
 
 --tabla instructores
-insert into instructores (cod_instructor, nombre, apellido_1, apellido_2, direccion, tel_cel, tel_habitacion, fecha_contratacion) 
+insert into instructores (cod_instructor, nombre, apellido_1, apellido_2, direccion, tel_cel, tel_habitacion, fecha_contratacion)
 values (100, 'matio', 'jhoson', 'ruiz', 'san jose', 11111111, 22222222, '1995-01-01');
 
-insert into instructores (cod_instructor, nombre, apellido_1, apellido_2, direccion, e_mail, tel_cel, tel_habitacion, fecha_contratacion) 
+insert into instructores (cod_instructor, nombre, apellido_1, apellido_2, direccion, e_mail, tel_cel, tel_habitacion, fecha_contratacion)
 values (101, 'juliana', 'blackz', 'arias', 'alajuela', 'jul@hotmail.com', 22222222, 11111111, '1995-01-01');
 
-insert into instructores (cod_instructor, nombre, apellido_1, apellido_2, tel_cel, tel_habitacion, fecha_contratacion) 
+insert into instructores (cod_instructor, nombre, apellido_1, apellido_2, tel_cel, tel_habitacion, fecha_contratacion)
 values (102, 'maria', 'perez', 'perez', 33333333, 33333335, '1998-04-20');
 
-insert into instructores (cod_instructor, nombre, apellido_1, apellido_2, direccion, e_mail, tel_cel, tel_habitacion, fecha_contratacion) 
+insert into instructores (cod_instructor, nombre, apellido_1, apellido_2, direccion, e_mail, tel_cel, tel_habitacion, fecha_contratacion)
 values (103, 'cristian', 'castro', 'ruiz', 'alajuela', 'cruiz@gmail.com', 44444444, 55555555, '1998-06-20');
 
-insert into instructores (cod_instructor, nombre, apellido_1, apellido_2, direccion, e_mail, tel_cel, tel_habitacion, fecha_contratacion) 
+insert into instructores (cod_instructor, nombre, apellido_1, apellido_2, direccion, e_mail, tel_cel, tel_habitacion, fecha_contratacion)
 values (104, 'margarita', 'mata', 'ruiz', 'pavas', 'mmata@yahoo.es', 11111112, 22222228, '2000-01-20');
 
-insert into instructores (cod_instructor, nombre, apellido_1, apellido_2, e_mail, tel_cel, tel_habitacion, fecha_contratacion) 
+insert into instructores (cod_instructor, nombre, apellido_1, apellido_2, e_mail, tel_cel, tel_habitacion, fecha_contratacion)
 values (105, 'shirley', 'ruiz', 'diaz', 'sruiz@hotmail.com', 22222229, 33333333, '2000-02-03');
 
-insert into instructores (cod_instructor, nombre, apellido_1, apellido_2, tel_cel, tel_habitacion, fecha_contratacion) 
+insert into instructores (cod_instructor, nombre, apellido_1, apellido_2, tel_cel, tel_habitacion, fecha_contratacion)
 values (106, 'cameron', 'rojas', 'rojas', 88888889, 77777777, '2010-07-20');
 
-insert into instructores (cod_instructor, nombre, apellido_1, apellido_2, e_mail, tel_cel, tel_habitacion, fecha_contratacion) 
+insert into instructores (cod_instructor, nombre, apellido_1, apellido_2, e_mail, tel_cel, tel_habitacion, fecha_contratacion)
 values (107, 'patrick', 'ruiz', 'diaz', 'pactrick@hotmail.com', 10101010, 98989898, '2011-12-15');
 
-insert into instructores (cod_instructor, nombre, apellido_1, apellido_2, tel_cel, tel_habitacion, fecha_contratacion) 
+insert into instructores (cod_instructor, nombre, apellido_1, apellido_2, tel_cel, tel_habitacion, fecha_contratacion)
 values (110, 'sharlotte', 'castillo', 'paz', 99999999, 22222233, '2010-05-03');
 
 -- Usuarios intructores
@@ -274,31 +274,31 @@ INSERT INTO rutinas VALUES (31, 202, 105, 55, '2008-05-10', 2);
 /*a. Mostrar cedula, nombre, apellido_1 , apellido_2, del cliente con mayor antigüedad en el
 gimnasio.*/
 
-select c1.cedula,c1.nombre,c1.apellido_1,c1.apellido_2,c1.fecha_inscripcion 
+select c1.cedula,c1.nombre,c1.apellido_1,c1.apellido_2,c1.fecha_inscripcion
 from cliente c1
-where c1.fecha_inscripcion = (select min(distinct fecha_inscripcion) 
+where c1.fecha_inscripcion = (select min(distinct fecha_inscripcion)
 from cliente);
 
 
 /*b. Mostrar cedula, nombre, apellido_1 , apellido_2, FECHA DE INSCRIPCION, de cliente mas
 reciente del gimnasio.*/
-select c1.cedula,c1.nombre,c1.apellido_1,c1.apellido_2,c1.fecha_inscripcion 
+select c1.cedula,c1.nombre,c1.apellido_1,c1.apellido_2,c1.fecha_inscripcion
 from cliente c1
-where c1.fecha_inscripcion =(select max(distinct fecha_inscripcion) 
+where c1.fecha_inscripcion =(select max(distinct fecha_inscripcion)
 from cliente);
 
 /*c. Mostrar cod_instructor , nombre, apellido_1 , apellido_2, del instructor con más
 antigüedad del gimnasio.*/
-select c1.cod_instructor,c1.nombre,c1.apellido_1,c1.apellido_2,c1.fecha_contratacion 
+select c1.cod_instructor,c1.nombre,c1.apellido_1,c1.apellido_2,c1.fecha_contratacion
 from instructores c1
-where c1.fecha_contratacion=(select min(distinct fecha_contratacion) 
+where c1.fecha_contratacion=(select min(distinct fecha_contratacion)
 from instructores);
 
 /*d. Mostrar cod_instructor , nombre, apellido_1 , apellido_2,fecha de contratacion del
 instructor mas reciente del gimnasio.*/
-select c1.cod_instructor,c1.nombre,c1.apellido_1,c1.apellido_2,c1.fecha_contratacion 
+select c1.cod_instructor,c1.nombre,c1.apellido_1,c1.apellido_2,c1.fecha_contratacion
 from instructores c1
-where c1.fecha_contratacion=(select max(distinct fecha_contratacion) 
+where c1.fecha_contratacion=(select max(distinct fecha_contratacion)
 from instructores);
 
 /*e. Mostrar cedula, nombre, apellido_1 , apellido_2, del cliente que ha estado en todos los
@@ -342,14 +342,14 @@ select c1.cedula,c1.nombre,c1.apellido_1,c1.apellido_2
 from cliente c1
 where c1.cedula not in (select r.cliente from rutinas r);
 
- 
+
 /*j. Mostrar cod_instructor , nombre, apellido_1 , apellido_2, del instructor que nunca a dado
 un curso y solo ha impartido rutinas*/
 
 select i.cod_instructor,i.nombre,i.apellido_1,i.apellido_2
 from instructores i
 where i.cod_instructor in(select r.instructor from rutinas r)
-minus 
+minus
 select i.cod_instructor,i.nombre,i.apellido_1,i.apellido_2
 from instructores i
 where i.cod_instructor in(select hc.instructor from historial_curso hc);
@@ -360,7 +360,7 @@ impartido rutinas y solo ha dado un cursos.*/
 select i.cod_instructor,i.nombre,i.apellido_1,i.apellido_2
 from instructores i
 where i.cod_instructor in(select hc.instructor from historial_curso hc)
-minus 
+minus
 select i.cod_instructor,i.nombre,i.apellido_1,i.apellido_2
 from instructores i
 where i.cod_instructor in(select r.instructor from rutinas r);

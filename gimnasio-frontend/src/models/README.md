@@ -33,7 +33,7 @@ Estructuras de los objetos que maneja el backend (Spring Boot):
 - `descripcion` (String)
 
 ## 5. Rutina (Entidad al Consultar - GET)
-Cuando se listan o consultan rutinas, el backend devuelve objetos anidados debido a las 
+Cuando se listan o consultan rutinas, el backend devuelve objetos anidados debido a las
 relaciones `@ManyToOne`:
 
 - `id` (Integer)
