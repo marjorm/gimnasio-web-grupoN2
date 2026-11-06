@@ -38,13 +38,10 @@ public class RutinaController {
         return ResponseEntity.ok(rutinas);
     }
 
+
     @GetMapping
     public List<Rutina> listar(HttpSession session) {
-        Usuario usuarioLogueado = (Usuario) session.getAttribute("usuarioLogueado");
-
-        if ( usuarioLogueado == null || !usuarioLogueado.getRol().equals("INSTRUCTOR")) {
-            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "No autorizado. Debe iniciar sesión.");
-        }
+        validarInstructor(session);
         return service.listar();
     }
 
@@ -74,14 +71,20 @@ public class RutinaController {
 
 
     //Metodo que valida que solo un ADMIN O INSTRUCTOR puede acceder a la accion
+
     private void validarInstructor(HttpSession session) {
         Usuario usuarioLogueado = (Usuario) session.getAttribute("usuarioLogueado");
 
-        // Validar si no ha iniciado sesión o si su rol no es ADMIN ni INSTRUCTOR
-        if (usuarioLogueado == null ||
-                (!"INSTRUCTOR".equals(usuarioLogueado.getRol()))) {
+        if (usuarioLogueado == null) {
+            throw new ResponseStatusException(
+                    HttpStatus.UNAUTHORIZED, "Debe iniciar sesión."
+            );
+        }
+        String rol = usuarioLogueado.getRol();
 
-            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "No autorizado. Debe iniciar sesión con el rol correcto.");
+        if (!"ADMIN".equals(rol) && !"INSTRUCTOR".equals(rol)) {
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "No tiene permisos para realizar esta acción.");
         }
     }
+
 }

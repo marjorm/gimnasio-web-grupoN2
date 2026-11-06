@@ -10,7 +10,6 @@ export default function FormularioContacto() {
 
     const [errores, setErrores] = useState({});
     const [aviso, setAviso] = useState('');
-    const [cargando, setCargando] = useState(false);
 
     const cambiar = (evento) => {
         const { name, value } = evento.target;
@@ -27,7 +26,7 @@ export default function FormularioContacto() {
         }));
     };
 
-    const verificar = async (evento) => {
+    const verificar = (evento) => {
         evento.preventDefault();
 
         const encontrados = {};
@@ -51,31 +50,10 @@ export default function FormularioContacto() {
             return;
         }
 
-        setCargando(true);
-        setAviso('');
-
-        try {
-            const respuesta = await fetch('http://localhost:8080/api/contactos', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify(datos)
-            });
-
-            if (respuesta.ok) {
-                setAviso('¡Su mensaje ha sido enviado correctamente!');
-                setDatos({ nombre: '', email: '', mensaje: '' });
-                setErrores({});
-            } else {
-                setAviso('Hubo un error al procesar el mensaje en el servidor.');
-            }
-        } catch (error) {
-            console.error('Error al conectar:', error);
-            setAviso('No se pudo conectar con el servidor backend.');
-        } finally {
-            setCargando(false);
-        }
+        setAviso(
+            'Los datos fueron validados. El mensaje NO se ha enviado ' +
+            'porque todavía no existe un servicio de contacto.'
+        );
     };
 
     return (
@@ -128,9 +106,13 @@ export default function FormularioContacto() {
                 <small role="alert">{errores.mensaje}</small>
             )}
 
-            <button type="submit" disabled={cargando}>
-                {cargando ? 'Enviando...' : 'Enviar mensaje'}
+            <button type="submit">
+                Verificar mensaje
             </button>
+
+            <small>
+                El formulario no envía mensajes todavía.
+            </small>
         </form>
     );
 }

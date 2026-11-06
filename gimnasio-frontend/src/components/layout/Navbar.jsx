@@ -1,13 +1,20 @@
-import { NavLink, useNavigate } from "react-router-dom";
-import { useAuth } from "../../context/auth.js";
+import { useState } from 'react';
+import { NavLink, useNavigate } from 'react-router-dom';
+import { useAuth } from '../../context/auth.js';
 
-function Navbar() {
+export default function Navbar() {
     const { autenticado, usuario, logout } = useAuth();
     const navigate = useNavigate();
+    const [errorSalida, setErrorSalida] = useState('');
 
-    const handleLogout = () => {
-        logout();
-        navigate("/login");
+    const handleLogout = async () => {
+        setErrorSalida('');
+        const resultado = await logout();
+        if (resultado.success) {
+            navigate('/login');
+        } else {
+            setErrorSalida(resultado.message || 'No se pudo cerrar la sesión.');
+        }
     };
 
     return (
@@ -19,32 +26,21 @@ function Navbar() {
             <NavLink to="/maquinas">Máquinas</NavLink>
             <NavLink to="/instructores">Instructores</NavLink>
             <NavLink to="/blog">Blog</NavLink>
-
-            {/* Enlaces y acciones condicionales según el estado de la sesión */}
             {autenticado ? (
                 <>
                     <NavLink to="/rutinas">Rutinas</NavLink>
-                    <NavLink to="/inscripcion">Verificar inscripción</NavLink>
-
-                    {usuario?.rol === "ADMIN" && (
-                        <NavLink to="/mantenimiento">Mantenimiento</NavLink>
+                    {(usuario?.rol === 'CLIENTE' || usuario?.rol === 'ADMIN') && (
+                        <NavLink to="/inscripcion">Verificar inscripción</NavLink>
                     )}
-
-                    <button 
-                        type="button" 
-                        onClick={handleLogout} 
-                        className="btn-logout"
-                    >
+                    {usuario?.rol === 'ADMIN' && <NavLink to="/mantenimiento">Mantenimiento</NavLink>}
+                    <button type="button" onClick={handleLogout} className="btn-logout">
                         Cerrar sesión ({usuario?.username || 'Usuario'})
                     </button>
                 </>
             ) : (
-                <>
-                    <NavLink to="/login">Acceso</NavLink>
-                </>
+                <NavLink to="/login">Acceso</NavLink>
             )}
+            {errorSalida && <p role="alert">{errorSalida}</p>}
         </nav>
     );
 }
-
-export default Navbar;

@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema
+        xmlns:xs="http://www.w3.org/2001/XMLSchema"
+        xmlns:tns="http://una.ac.cr/gimnasio/soap/cursos"
+        targetNamespace="http://una.ac.cr/gimnasio/soap/cursos"
+        elementFormDefault="qualified">
+
+    <xs:element name="ConsultarCursoRequest">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="id" type="xs:int"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:element name="ConsultarCursoResponse">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="encontrado" type="xs:boolean"/>
+                <xs:element name="id" type="xs:int"
+                            minOccurs="0"/>
+                <xs:element name="descripcion" type="xs:string"
+                            minOccurs="0"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
+</xs:schema>

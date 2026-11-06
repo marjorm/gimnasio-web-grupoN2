@@ -1,157 +1,110 @@
-import { createContext, useContext, useState, useEffect, useMemo } from "react";
+import { useCallback, useEffect, useMemo, useState } from 'react';
+import { AuthContext } from './auth.js';
 
-// Crear el contexto internamente si no se importa externamente
-export const AuthContext = createContext(null);
+const normalizarUsuario = (datos) => {
+    if (!datos || !Number.isInteger(Number(datos.id)) ||
+        typeof datos.username !== 'string' ||
+        !['ADMIN', 'INSTRUCTOR', 'CLIENTE'].includes(datos.rol)) {
+        return null;
+    }
 
-export function AuthProvider({ children, comprobarSesion }) {
-    const tieneVerificador = typeof comprobarSesion === "function";
+    return { id: Number(datos.id), username: datos.username, rol: datos.rol };
+};
 
-    const [usuario, setUsuario] = useState(() => {
-        const guardado = localStorage.getItem('usuario');
-        return guardado ? JSON.parse(guardado) : null;
-    });
-
-    const [revision, setRevision] = useState(() => ({
-        verificador: comprobarSesion,
-        estado: tieneVerificador ? "verificando" : "sin-configurar"
-    }));
-
-    const estado =
-        revision.verificador === comprobarSesion
-            ? revision.estado
-            : tieneVerificador
-                ? "verificando"
-                : "sin-configurar";
+export function AuthProvider({ children }) {
+    const [usuario, setUsuario] = useState(null);
+    const [verificando, setVerificando] = useState(true);
 
     useEffect(() => {
-        if (!tieneVerificador) {
-            return undefined;
-        }
-
         let vigente = true;
+        const controlador = new AbortController();
 
-        Promise.resolve()
-            .then(() => comprobarSesion())
-            .then((resultado) => {
-                if (!vigente) return;
-
-                setRevision({
-                    verificador: comprobarSesion,
-                    estado: resultado === true ? "autenticado" : "sin-sesion"
+        const comprobarSesion = async () => {
+            try {
+                const respuesta = await fetch('/api/usuarios/sesion', {
+                    credentials: 'include',
+                    cache: 'no-store',
+                    signal: controlador.signal
                 });
-            })
-            .catch(() => {
-                if (!vigente) return;
 
-                setRevision({
-                    verificador: comprobarSesion,
-                    estado: "error"
-                });
-            });
+                if (!respuesta.ok) {
+                    if (vigente) setUsuario(null);
+                    return;
+                }
 
+                const datos = await respuesta.json();
+                if (vigente) setUsuario(normalizarUsuario(datos));
+            } catch {
+                if (vigente) setUsuario(null);
+            } finally {
+                if (vigente) setVerificando(false);
+            }
+        };
+
+        void comprobarSesion();
         return () => {
             vigente = false;
+            controlador.abort();
         };
-    }, [comprobarSesion, tieneVerificador]);
+    }, []);
 
-    const login = async (username, password) => {
+    const login = useCallback(async (username, password) => {
         try {
-            // Petición al endpoint backend
-            const response = await fetch('http://localhost:8080/api/usuarios/login', {
+            const respuesta = await fetch('/api/usuarios/login', {
                 method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
                 credentials: 'include',
-                body: JSON.stringify({ username, password, passwordHash: password })
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ username, passwordHash: password })
             });
 
-            if (response.ok) {
-                const data = await response.json();
-                setUsuario(data);
-                localStorage.setItem('usuario', JSON.stringify(data));
-                setRevision(prev => ({ ...prev, estado: "autenticado" }));
-                return { success: true, usuario: data };
+            if (!respuesta.ok) {
+                return {
+                    success: false,
+                    message: respuesta.status === 401
+                        ? 'Credenciales inválidas.'
+                        : `No se pudo iniciar sesión (HTTP ${respuesta.status}).`
+                };
             }
 
-            // Mapeo fallback con usuarios registrados en MySQL
-            if ((username === 'admin' && password === 'admin123') ||
-                (username === '201' && password === '123456') ||
-                (username === 'jul@hotmail.com' && password === '123456')) {
-
-                const rolMapeado = username === 'admin' ? 'ADMIN' : (username === '201' ? 'CLIENTE' : 'INSTRUCTOR');
-                const usuarioSimulado = { username, rol: rolMapeado };
-
-                setUsuario(usuarioSimulado);
-                localStorage.setItem('usuario', JSON.stringify(usuarioSimulado));
-                localStorage.setItem('token', 'token-valido');
-                setRevision(prev => ({ ...prev, estado: "autenticado" }));
-                return { success: true, usuario: usuarioSimulado };
+            const datos = normalizarUsuario(await respuesta.json());
+            if (!datos) {
+                return { success: false, message: 'El servidor devolvió un usuario inválido.' };
             }
 
-            return { success: false, message: 'Credenciales inválidas' };
-        } catch (error) {
-            console.error("Error al conectar con el servidor de autenticación:", error);
-
-            // Si el servidor falla pero son credenciales locales conocidas
-            if (username === 'admin' && password === 'admin123') {
-                const adminUser = { username: 'admin', rol: 'ADMIN' };
-                setUsuario(adminUser);
-                localStorage.setItem('usuario', JSON.stringify(adminUser));
-                setRevision(prev => ({ ...prev, estado: "autenticado" }));
-                return { success: true, usuario: adminUser };
-            }
-
+            setUsuario(datos);
+            setVerificando(false);
+            return { success: true, usuario: datos };
+        } catch {
             return { success: false, message: 'No se pudo conectar con el backend.' };
         }
-    };
+    }, []);
 
-    const logout = async () => {
+    const logout = useCallback(async () => {
         try {
-            await fetch('http://localhost:8080/api/usuarios/logout', {
+            const respuesta = await fetch('/api/usuarios/logout', {
                 method: 'POST',
                 credentials: 'include'
             });
-        } catch (error) {
-            console.error("Error al cerrar sesión en el servidor:", error);
-        } finally {
+
+            if (!respuesta.ok) {
+                return { success: false, message: 'No se pudo cerrar la sesión en el servidor.' };
+            }
+
             setUsuario(null);
-            localStorage.removeItem('usuario');
-            localStorage.removeItem('token');
-            setRevision(prev => ({ ...prev, estado: "sin-sesion" }));
+            return { success: true };
+        } catch {
+            return { success: false, message: 'No hay conexión con el servidor para cerrar la sesión.' };
         }
-    };
+    }, []);
 
-    const valor = useMemo(
-        () => ({
-            estado,
-            autenticado: estado === "autenticado" || usuario !== null,
-            verificando: estado === "verificando",
-            usuario,
-            login,
-            logout
-        }),
-        [estado, usuario]
-    );
+    const valor = useMemo(() => ({
+        estado: verificando ? 'verificando' : usuario ? 'autenticado' : 'sin-sesion',
+        autenticado: !verificando && usuario !== null,
+        verificando,
+        usuario,
+        login,
+        logout
+    }), [verificando, usuario, login, logout]);
 
-    return (
-        <AuthContext.Provider value={valor}>
-            {children}
-        </AuthContext.Provider>
-    );
+    return <AuthContext.Provider value={valor}>{children}</AuthContext.Provider>;
 }
-
-
-export function useAuth() {
-    const context = useContext(AuthContext);
-    if (!context) {
-        return {
-            autenticado: false,
-            verificando: false,
-            usuario: null,
-            login: async () => ({ success: false }),
-            logout: async () => {}
-        };
-    }
-    return context;
-}
-
-export default AuthContext;

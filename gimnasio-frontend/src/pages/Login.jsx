@@ -1,84 +1,61 @@
 import { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
-import { useAuth } from '../context/AuthContext.jsx';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
+import { useAuth } from '../context/auth.js';
 
 export default function Login() {
-    const { login } = useAuth();
+    const { login, verificando } = useAuth();
     const navigate = useNavigate();
-
+    const location = useLocation();
     const [usuarioInput, setUsuarioInput] = useState('');
     const [passwordInput, setPasswordInput] = useState('');
     const [error, setError] = useState('');
     const [cargando, setCargando] = useState(false);
 
-    const handleSubmit = async (e) => {
-        e.preventDefault();
+    const handleSubmit = async (evento) => {
+        evento.preventDefault();
         setError('');
         setCargando(true);
-
         try {
-            // Llama a la función login del AuthContext que actualiza el estado global
-            const res = await login(usuarioInput, passwordInput);
-
-            if (res && res.success) {
-                const usuarioSesion = JSON.parse(localStorage.getItem('usuario') || '{}');
-                const rol = (usuarioSesion.rol || 'ADMIN').toUpperCase();
-
-                if (rol === 'ADMIN' || rol === 'ADMINISTRADOR') {
-                    navigate('/mantenimiento', { replace: true });
-                } else {
-                    navigate('/', { replace: true });
-                }
-            } else {
-                setError(res?.message || 'Usuario o contraseña incorrectos.');
+            const resultado = await login(usuarioInput, passwordInput);
+            if (!resultado?.success) {
+                setError(resultado?.message || 'Usuario o contraseña incorrectos.');
+                return;
             }
-        } catch (err) {
-            console.error('Error durante el inicio de sesión:', err);
-            setError('Ocurrió un error inesperado al procesar la solicitud.');
+
+            const rol = resultado.usuario.rol;
+            const destinoAnterior = location.state?.desde;
+            const puedeVolver = destinoAnterior === '/mantenimiento'
+                ? rol === 'ADMIN'
+                : destinoAnterior === '/inscripcion' || destinoAnterior === '/desinscribirse'
+                    ? rol === 'ADMIN' || rol === 'CLIENTE'
+                    : destinoAnterior === '/rutinas';
+
+            navigate(puedeVolver ? destinoAnterior : rol === 'ADMIN' ? '/mantenimiento' : '/', {
+                replace: true
+            });
+        } catch {
+            setError('No se pudo completar el inicio de sesión.');
         } finally {
             setCargando(false);
         }
     };
 
     return (
-        <div>
-            <section aria-labelledby="titulo-login">
-                <h2 id="titulo-login">Acceso al gimnasio</h2>
-
-                {error && <p style={{ color: '#b00020', fontWeight: 'bold' }} role="alert">{error}</p>}
-
-                <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '10px', maxWidth: '300px', margin: '20px 0' }}>
-                    <div>
-                        <label htmlFor="username">Usuario: </label>
-                        <input
-                            id="username"
-                            type="text"
-                            value={usuarioInput}
-                            onChange={(e) => setUsuarioInput(e.target.value)}
-                            required
-                        />
-                    </div>
-
-                    <div>
-                        <label htmlFor="password">Contraseña: </label>
-                        <input
-                            id="password"
-                            type="password"
-                            value={passwordInput}
-                            onChange={(e) => setPasswordInput(e.target.value)}
-                            required
-                        />
-                    </div>
-
-                    <button type="submit" disabled={cargando}>
-                        {cargando ? 'Ingresando...' : 'Entrar'}
-                    </button>
-                </form>
-
-                <p>
-                    <Link to="/">Volver al inicio</Link>
-                </p>
-            </section>
-        </div>
+        <section aria-labelledby="titulo-login">
+            <h2 id="titulo-login">Acceso al gimnasio</h2>
+            {error && <p role="alert" style={{ color: '#b00020', fontWeight: 'bold' }}>{error}</p>}
+            <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: 10, maxWidth: 300, margin: '20px 0' }}>
+                <label htmlFor="username">Usuario</label>
+                <input id="username" type="text" autoComplete="username" value={usuarioInput}
+                    onChange={e => setUsuarioInput(e.target.value)} required />
+                <label htmlFor="password">Contraseña</label>
+                <input id="password" type="password" autoComplete="current-password" value={passwordInput}
+                    onChange={e => setPasswordInput(e.target.value)} required />
+                <button type="submit" disabled={cargando || verificando}>
+                    {cargando || verificando ? 'Verificando...' : 'Entrar'}
+                </button>
+            </form>
+            <p><Link to="/">Volver al inicio</Link></p>
+        </section>
     );
 }

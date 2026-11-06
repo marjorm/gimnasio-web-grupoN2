@@ -5,17 +5,25 @@ import org.springframework.transaction.annotation.Transactional;
 import una.ac.cr.gimnasio_backend.models.Curso;
 import una.ac.cr.gimnasio_backend.repositories.CursoRepository;
 import una.ac.cr.gimnasio_backend.exceptions.CursoNotFoundException;
+import org.springframework.http.HttpStatus;
+import org.springframework.web.server.ResponseStatusException;
+import org.springframework.context.ApplicationEventPublisher;
+import una.ac.cr.gimnasio_backend.events.CursoRegistradoEvent;
+import org.springframework.context.annotation.Scope;
 
 import java.util.List;
 
 
 @Service
+@Scope("singleton")
 public class CursoService {
 
     private final CursoRepository cursoRepository;
+    private final ApplicationEventPublisher eventPublisher;
 
-    public CursoService(CursoRepository cursoRepository) {
+    public CursoService(CursoRepository cursoRepository, ApplicationEventPublisher eventPublisher) {
         this.cursoRepository = cursoRepository;
+        this.eventPublisher = eventPublisher;
     }
 
     @Transactional(readOnly = true)
@@ -32,7 +40,24 @@ public class CursoService {
 
     @Transactional
     public Curso guardarCurso(Curso curso) {
-        return cursoRepository.save(curso);
+
+        if (curso.getId() == null || curso.getId() <= 0) {
+            throw new ResponseStatusException(
+                    HttpStatus.BAD_REQUEST,
+                    "El ID del curso debe ser mayor que cero."
+            );
+        }
+
+        if (cursoRepository.existsById(curso.getId())) {
+            throw new ResponseStatusException(
+                    HttpStatus.CONFLICT,
+                    "Ya existe un curso registrado con ese ID."
+            );
+        }
+
+        Curso cursoGuardado = cursoRepository.save(curso);
+        eventPublisher.publishEvent(new CursoRegistradoEvent(cursoGuardado.getId(), cursoGuardado.getDescripcion()));
+        return cursoGuardado;
     }
 
     @Transactional

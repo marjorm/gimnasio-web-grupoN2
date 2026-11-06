@@ -42,8 +42,9 @@ public class MaquinaService {
 
     @Transactional
     public Maquina actualizar(Integer id, Maquina x) {
-        Maquina e=obtener(id);
+        Maquina e = obtener(id);
         e.setDescripcion(x.getDescripcion());
+        e.setEstado(x.getEstado());
         return repository.save(e);
     }
 

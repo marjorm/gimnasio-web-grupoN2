@@ -1,17 +1,23 @@
 import { useState, useEffect } from 'react';
 import { rutinaService } from '../services/rutinaService';
+import { useAuth } from '../context/auth.js';
 import MensajeEstado from '../components/ui/MensajeEstado';
 
 export default function Rutinas() {
+    const { usuario } = useAuth();
+    const rol = usuario?.rol;
     const [rutinas, setRutinas] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
 
     useEffect(() => {
+        if (!rol) return;
         const cargarMisRutinas = async () => {
             try {
                 setLoading(true);
-                const dataRutinas = await rutinaService.obtenerMisRutinas();
+                const dataRutinas = rol === 'CLIENTE'
+                    ? await rutinaService.obtenerMisRutinas()
+                    : await rutinaService.obtenerTodas();
                 setRutinas(Array.isArray(dataRutinas) ? dataRutinas : []);
                 setError(null);
             } catch (err) {
@@ -23,12 +29,12 @@ export default function Rutinas() {
         };
 
         cargarMisRutinas();
-    }, []);
+    }, [rol]);
 
     return (
         <div>
             <section>
-                <h2>Mis rutinas personalizadas</h2>
+                <h2>{rol === 'CLIENTE' ? 'Mis rutinas personalizadas' : 'Rutinas registradas'}</h2>
                 <p className="intro-seccion">
                     Aquí puedes consultar el detalle de las rutinas que te han sido asignadas en el gimnasio.
                 </p>

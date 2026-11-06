@@ -1,4 +1,4 @@
-const API_BASE_URL = 'http://localhost:8080/api';
+const API_BASE_URL = '/api';
 
 export const apiCall = async (endpoint, options = {}) => {
     try {
@@ -18,7 +18,7 @@ export const apiCall = async (endpoint, options = {}) => {
             try {
                 const errorJson = JSON.parse(errorText);
                 mensajeFinal = errorJson.mensaje || errorJson.message || errorJson.error || errorText;
-            } catch (e) {
+            } catch {
                 mensajeFinal = errorText;
             }
 
