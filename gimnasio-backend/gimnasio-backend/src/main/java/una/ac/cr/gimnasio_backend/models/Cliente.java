@@ -8,13 +8,13 @@ import jakarta.persistence.Table;
 import jakarta.validation.constraints.*;
 import java.time.LocalDate;
 
-import java.time.LocalDate;
 
 @Entity
 @Table(name = "cliente")
 public class Cliente {
     @Id
     @NotNull(message = "La cedula es obligatoria")
+    @Positive(message = "La cédula debe ser mayor que cero")
     @Column(name = "cedula", nullable = false)
     private Integer id;
 
@@ -48,10 +48,12 @@ public class Cliente {
     private LocalDate fechaInscripcion;
 
     @NotNull(message = "El celular es obligatorio")
+    @Positive(message = "El celular debe ser mayor que cero")
     @Column(name = "celular", nullable = false)
     private Integer celular;
 
     @NotNull(message = "El teléfono de habitación es obligatorio")
+    @Positive(message = "El teléfono de habitación debe ser mayor que cero")
     @Column(name = "tel_habitacion", nullable = false)
     private Integer telHabitacion;
     public Integer getId() {

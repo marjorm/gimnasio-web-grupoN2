@@ -49,14 +49,26 @@ public class MaquinaController {
         return ResponseEntity.noContent().build();
     }
 
+
     private void validarInstructor(HttpSession session) {
+
         Usuario usuarioLogueado = (Usuario) session.getAttribute("usuarioLogueado");
 
-        // Validar si no ha iniciado sesión o si su rol no es ADMIN ni INSTRUCTOR
-        if (usuarioLogueado == null ||
-                !"INSTRUCTOR".equals(usuarioLogueado.getRol())) {
+        // Verificar que el usuario haya iniciado sesión
+        if (usuarioLogueado == null) {
+            throw new ResponseStatusException(
+                    HttpStatus.UNAUTHORIZED, "Debe iniciar sesión."
+            );
+        }
 
-            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "No autorizado. Debe iniciar sesión con el rol correcto.");
+        String rol = usuarioLogueado.getRol();
+
+        // Permitir únicamente ADMIN e INSTRUCTOR
+        if (!"ADMIN".equals(rol) && !"INSTRUCTOR".equals(rol)) {
+            throw new ResponseStatusException(
+                    HttpStatus.FORBIDDEN, "No tiene permisos para realizar esta acción."
+            );
         }
     }
+
 }

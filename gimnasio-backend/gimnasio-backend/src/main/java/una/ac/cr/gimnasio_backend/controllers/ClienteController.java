@@ -31,24 +31,37 @@ public class ClienteController {
         return ResponseEntity.ok(clientes);
     }
 
-    //Que solo el instructor y el mismo cliente pueda ver la informacion del cliente
+
     @GetMapping("/{cedula}")
-    public ResponseEntity<Cliente> obtenerPorCedula(@PathVariable Integer cedula, HttpSession session) {
-        Usuario usuarioLogueado = (Usuario) session.getAttribute("usuarioLogueado");
+    public ResponseEntity<Cliente> obtenerPorCedula(
+            @PathVariable Integer cedula,
+            HttpSession session) {
+
+        Usuario usuarioLogueado =
+                (Usuario) session.getAttribute("usuarioLogueado");
 
         if (usuarioLogueado == null) {
-            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Debe iniciar sesión");
+            throw new ResponseStatusException(
+                    HttpStatus.UNAUTHORIZED,
+                    "Debe iniciar sesión."
+            );
         }
 
-        // Verificar si es instructor
-        boolean esInstructor = "INSTRUCTOR".equals(usuarioLogueado.getRol());
+        String rol = usuarioLogueado.getRol();
 
-        // Verificar si es el mismo cliente consultando su propia cedula
-        boolean esElMismoCliente = usuarioLogueado.getId().equals(cedula);
+        boolean esAdministrador = "ADMIN".equals(rol);
+        boolean esInstructor = "INSTRUCTOR".equals(rol);
 
-        // Si NO es instructor Y NO es el mismo cliente, entonces no autorizado
-        if (!esInstructor && !esElMismoCliente) {
-            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "No autorizado para ver esta informacion");
+        boolean esElMismoCliente =
+                "CLIENTE".equals(rol)
+                        && usuarioLogueado.getId() != null
+                        && usuarioLogueado.getId().equals(cedula);
+
+        if (!esAdministrador && !esInstructor && !esElMismoCliente) {
+            throw new ResponseStatusException(
+                    HttpStatus.FORBIDDEN,
+                    "No tiene permisos para consultar este cliente."
+            );
         }
 
         Cliente cliente = clienteService.obtenerPorCedula(cedula);
@@ -56,7 +69,7 @@ public class ClienteController {
     }
 
     @PostMapping
-    public ResponseEntity<Cliente> guardarCliente( @Valid @RequestBody Cliente cliente, HttpSession session) {
+    public ResponseEntity<Cliente> guardarCliente(@Valid @RequestBody Cliente cliente, HttpSession session) {
         validarInstructor(session);
         Cliente nuevoCliente = clienteService.guardarCliente(cliente);
         return ResponseEntity.status(HttpStatus.CREATED).body(nuevoCliente);
@@ -80,13 +93,23 @@ public class ClienteController {
 
     //Metodo que valida que solo un ADMIN O INSTRUCTOR puede acceder a la accion
     private void validarInstructor(HttpSession session) {
-        Usuario usuarioLogueado = (Usuario) session.getAttribute("usuarioLogueado");
+        Usuario usuarioLogueado =
+                (Usuario) session.getAttribute("usuarioLogueado");
 
-        // Validar si no ha iniciado sesión o si su rol no es ADMIN ni INSTRUCTOR
-        if (usuarioLogueado == null ||
-                (!"INSTRUCTOR".equals(usuarioLogueado.getRol()))) {
+        if (usuarioLogueado == null) {
+            throw new ResponseStatusException(
+                    HttpStatus.UNAUTHORIZED,
+                    "Debe iniciar sesión."
+            );
+        }
 
-            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "No autorizado. Debe iniciar sesión con el rol correcto.");
+        String rol = usuarioLogueado.getRol();
+
+        if (!"ADMIN".equals(rol) && !"INSTRUCTOR".equals(rol)) {
+            throw new ResponseStatusException(
+                    HttpStatus.FORBIDDEN,
+                    "No tiene permisos para realizar esta acción."
+            );
         }
     }
 }
