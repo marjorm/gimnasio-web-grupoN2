@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import FormularioCliente from '../components/forms/FormularioCliente';
 import ModalConfirmacion from '../components/ui/ModalConfirmacion';
 import { clienteService } from '../services/clienteService';
-import { usuarioService } from '../services/usuarioService';
+import { apiCall } from '../services/api';
 
 export default function Mantenimiento() {
     const [clientes, setClientes] = useState([]);
@@ -57,15 +57,24 @@ export default function Mantenimiento() {
                 );
             } else {
                 // 2. Si es nuevo, primero creamos la cuenta de usuario ligada a su cédula (id)
-                await usuarioService.registrar({
-                    id: datos.id,
-                    username: datos.username,
-                    passwordHash: datos.passwordHash,
-                    rol: datos.rol || 'CLIENTE'
+                await apiCall('/registro-clientes', {
+                    method: 'POST',
+                    body: JSON.stringify({
+                        username: datos.username,
+                        password: datos.passwordHash,
+                        cliente: {
+                            id: datos.id,
+                            nombre: datos.nombre,
+                            apellido1: datos.apellido1,
+                            apellido2: datos.apellido2,
+                            direccion: datos.direccion,
+                            eMail: datos.eMail,
+                            fechaInscripcion: datos.fechaInscripcion,
+                            celular: datos.celular,
+                            telHabitacion: datos.telHabitacion
+                        }
+                    })
                 });
-
-                // 3. Luego creamos el perfil del cliente
-                await clienteService.guardarCliente(datos);
             }
 
             setMostrarFormulario(false);

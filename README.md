@@ -181,3 +181,68 @@ Abrir la URL que indique Vite (normalmente `http://localhost:5173`). `npm run bu
 ## 9. Alcance pendiente antes de la entrega final
 
 La validación completa incluirá frontend integrado con autenticación real, CRUD de cada recurso, permisos por rol, validación y errores HTTP, casos de inscripción/desinscripción, revisión de seguridad, evidencias, manual de usuario y documentación técnica. Estas actividades se ejecutarán en sus fases y PR respectivos; este README distingue explícitamente lo **comprobado** de lo **pendiente**.
+
+## Entregable 6 - version integrada
+
+El proyecto final utiliza **React (Vite)** como SPA, **Spring Boot 4.1.1 / Java 17** para los servicios REST y SOAP, **JPA/Hibernate** como ORM y **MariaDB/MySQL de XAMPP**. Se recomienda Node.js 22 y Maven 3.10.0. Nota académica: el enunciado del entregable 1 menciona **JDK 26**; la aplicación está configurada para Java 17 y debe aclararse esa diferencia con la profesora o documentarse su compatibilidad antes de declarar el requisito aprobado.
+
+### Requisitos
+
+- Windows PowerShell 5.1 o superior; Java 17+, Maven, Node.js 22, npm.
+- XAMPP con servidor MySQL/MariaDB iniciado en el puerto 3306, usuario de prueba `root` sin contraseña. Para entornos reales configurar una cuenta dedicada y secretos seguros.
+- Clonar: `git clone https://github.com/marjorm/gimnasio-web-grupoN2.git`
+
+### Instalacion y base de datos segura
+
+Desde el directorio raiz del repositorio, con MariaDB de XAMPP levantada:
+
+```powershell
+.\scripts\preparar-entregable6.ps1 -NombreBase gimnasio_entregable6_test
+```
+
+El comando prepara una base **independiente**, importa los datos iniciales de `GIMNASIO.sql` (cuando aún no existe), agrega las tablas E6 mediante `scripts/entregable6_migracion.sql` y comprueba que existen 12 tablas. El script no ejecuta un DROP. **No usar el nombre `gimnasio` original sin respaldo y autorización específica**.
+
+El archivo `GIMNASIO_ENTREGABLE6.sql` contiene el SQL de instalación consolidado creado por el instalador E6; mantenerlo junto a los scripts fuente.
+
+### Backend (terminal 1)
+
+```powershell
+cd .\gimnasio-backend\gimnasio-backend
+mvn -B -ntp clean verify
+java -jar .\target\gimnasio-backend-0.0.1-SNAPSHOT.jar --server.port=18081 --spring.datasource.url=jdbc:mysql://127.0.0.1:3306/gimnasio_entregable6_test --spring.jpa.hibernate.ddl-auto=none
+```
+
+### Frontend (terminal 2)
+
+Desde la raíz del repositorio:
+
+```powershell
+cd .\gimnasio-frontend
+npm ci
+$env:E6_PROXY_TARGET='http://127.0.0.1:18081'
+npm run dev -- --host 127.0.0.1 --port 5174 --strictPort
+```
+
+Abrir **http://127.0.0.1:5174**. El frontend usa `/api` y Vite lo reenvía al backend. Si se usa un dominio/servidor de producción, debe configurarse TLS/HTTPS y el enrutamiento proxy equivalente.
+
+### Funcionalidades
+
+- Navegación pública, contacto persistente, consulta de cursos, máquinas e instructores, blog y modo de vista compacta.
+- Registro transaccional de cliente/usuario, login/logout con roles y BCrypt.
+- Inscripciones a cursos y rutinas asignadas con control de duplicados.
+- Cancelación y baja sujetas a estado de pagos; bloqueo de nuevas inscripciones tras una baja.
+- Mantenimiento para instructores y administradores, con módulos de clientes, cursos, rutinas, máquinas, historial y detalles; usuarios, pagos y consultas para administrador.
+- SOAP de cursos publicado mediante WSDL/XSD.
+
+### Pruebas
+
+En la sesión de verificación E6 del 05/11/2026: `npm run lint` dio 0 advertencias y errores; `npm run build` se completó; Maven ejecutó **9 pruebas PASS**; se comprobó `E6_INTEGRACION_REAL=PASS` sobre la base independiente, incluyendo 401/403, duplicados 409, flujo de pago/cancelación y CRUD de cursos. Faltan las capturas de la versión E6 y la revisión visual/manual de todos los formularios y operaciones CRUD. Consultar `documentacion/MATRIZ_CUMPLIMIENTO_E1_E6.md` y los PDF de documentación técnica y manual.
+
+### Seguridad
+
+Evitar credenciales de producción en Git. Los datos de demostración de `GIMNASIO.sql` son solo de prueba. No publicar `gimnasio_entregable6_test` ni exponer Spring Boot por Internet sin HTTPS, autenticación robusta y configuración segura. La autorización de endpoints debe comprobarse del lado del servidor.
+
+
+## Informe final del entregable 6
+
+El informe academico, la documentacion tecnica, el manual de usuario con capturas y la matriz E1-E6 se encuentran en `documentacion/`.

@@ -39,6 +39,7 @@ public class MaquinaController {
     @PutMapping("/{id}")
     public Maquina actualizar(@PathVariable Integer id, @Valid @RequestBody Maquina x, HttpSession session) {
         validarInstructor(session);
+        if (!id.equals(x.getId())) throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "No se permite modificar el ID de la maquina.");
         return service.actualizar(id,x);
     }
 

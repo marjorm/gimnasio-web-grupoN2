@@ -1,0 +1,42 @@
+{
+  "fecha": "2026-11-06T05:19:32.337Z",
+  "base": "http://127.0.0.1:5174",
+  "resultado": "PASS",
+  "resultados": [
+    {
+      "name": "inicio",
+      "path": "/",
+      "images": 3,
+      "broken": 0,
+      "visibleErrors": []
+    },
+    {
+      "name": "cursos",
+      "path": "/cursos",
+      "images": 6,
+      "broken": 0,
+      "visibleErrors": []
+    },
+    {
+      "name": "maquinas",
+      "path": "/maquinas",
+      "images": 7,
+      "broken": 0,
+      "visibleErrors": []
+    },
+    {
+      "name": "instructores",
+      "path": "/instructores",
+      "images": 9,
+      "broken": 0,
+      "visibleErrors": []
+    },
+    {
+      "name": "acceso",
+      "path": "/login",
+      "images": 0,
+      "broken": 0,
+      "visibleErrors": []
+    }
+  ]
+}

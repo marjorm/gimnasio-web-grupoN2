@@ -80,6 +80,7 @@ public class ClienteController {
             @PathVariable Integer cedula,
             @Valid @RequestBody Cliente clienteDetalles, HttpSession session) {
         validarInstructor(session);
+        if (!cedula.equals(clienteDetalles.getId())) throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "No se permite modificar la cedula.");
         Cliente clienteActualizado = clienteService.actualizarCliente(cedula, clienteDetalles);
         return ResponseEntity.ok(clienteActualizado);
     }
